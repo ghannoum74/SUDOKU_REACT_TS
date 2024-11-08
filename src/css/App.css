@@ -82,7 +82,7 @@ input[type="text"]:focus {
 }
 
 .pause-icon:hover {
-  color: rgb(181, 186, 191) !important ;
+  color: #dce3ed !important ;
 }
 
 /* styling game container*/
@@ -130,7 +130,54 @@ input[type="text"]:focus {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
-.sudoku-setting-container .sudoku-setting-icons li:last-child {
+.sudoku-setting-container .sudoku-setting-icons li:hover {
+  background-color: #dce3ed;
+}
+
+/* styling setting container */
+.setting-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* styling sudoku inputs */
+
+.number-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Create a 3-column grid */
+  gap: 10px; /* Space between grid items */
+  list-style-type: none; /* Remove list bullets */
+  padding: 0;
+}
+
+.number-container li {
+  font-size: 42px;
+  color: var(--light-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: var(--blur-blue);
+  border-radius: 5px;
+}
+
+.number-container li:hover {
+  background-color: #dce3ed;
+}
+
+.new-game {
+  grid-column: span 3;
+  font-size: 1rem !important;
+  color: #fff !important;
+  background-color: #5a7bc0 !important;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.new-game:hover {
+  background-color: #7091d5 !important;
 }
