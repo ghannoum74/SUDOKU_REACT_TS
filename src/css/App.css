@@ -2,6 +2,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  --soft-gray: #94a3b7;
+  --light-blue: #325aaf;
+  --dark-blue: #344861;
+  --hover-effect: #f1f4f8;
 }
 
 html,
@@ -19,4 +23,61 @@ ul li {
 input[type="text"],
 input[type="text"]:focus {
   border: none;
+}
+
+.main-container {
+  width: 50%;
+  padding-top: 1rem;
+  margin: auto;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+}
+
+.game-info-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.game-info-container .dificulty-wrapper,
+.data-game-container {
+  display: flex;
+  font-size: 0.8rem;
+  font-family: "Mona Sans", sans-serif;
+  font-weight: 600;
+  color: var(--soft-gray);
+}
+
+.data-game-container {
+  gap: 20px;
+}
+
+.data-game-container .title {
+  padding-right: 0.2rem;
+}
+.data-game-container .value {
+  color: var(--dark-blue);
+}
+
+.data-game-container .timer {
+  width: 3rem;
+}
+.game-info-container .dificulty-wrapper li {
+  cursor: pointer;
+  padding: 0.1rem 0.3rem;
+  border-radius: 5px;
+  padding: 5px 8px;
+}
+
+.game-info-container .dificulty-wrapper li:hover {
+  background-color: var(--hover-effect);
+}
+
+.dificulty-wrapper .hovered-data.clickable {
+  color: var(--light-blue);
+}
+
+.pause-icon:hover {
+  color: rgb(181, 186, 191) !important ;
 }
