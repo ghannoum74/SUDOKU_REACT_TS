@@ -44,7 +44,7 @@ const GameNavbar = () => {
   ];
 
   return (
-    <div className="game-info-container">
+    <div className="game-navbar-container">
       <ul className="dificulty-wrapper">
         <li>Dificulty:</li>
         {difficulty.map((val, key) => (
