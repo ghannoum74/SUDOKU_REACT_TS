@@ -41,12 +41,13 @@ const SudokuSetting = () => {
           <div className="caption">Notes</div>
         </div>
         <div className="icon-container">
-          <li>
+          <li className="hint">
             <FontAwesomeIcon
               icon={faLightbulb}
               size="2xl"
               style={{ color: "#325aaf" }}
             />
+            <div className="hint-number">3</div>
           </li>
           <div className="caption">Hint</div>
         </div>
