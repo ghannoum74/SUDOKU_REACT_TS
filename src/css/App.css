@@ -73,7 +73,7 @@ input[type="text"]:focus {
   padding: 5px 8px;
 }
 
-.game-navbar-container .dificulty-wrapper li:hover {
+.game-navbar-container .dificulty-wrapper li:hover:not(li:first-of-type) {
   background-color: var(--hover-effect);
 }
 
@@ -135,6 +135,27 @@ input[type="text"]:focus {
 
 .sudoku-setting-container .sudoku-setting-icons li:hover {
   background-color: #dce3ed;
+}
+
+.sudoku-setting-container .sudoku-setting-icons .hint {
+  position: relative;
+}
+
+.sudoku-setting-container .sudoku-setting-icons .hint .hint-number {
+  color: white;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  background-color: var(--light-blue);
+  width: 24px;
+  height: 24px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -15%;
+  left: 60%;
 }
 
 /* styling setting container */
