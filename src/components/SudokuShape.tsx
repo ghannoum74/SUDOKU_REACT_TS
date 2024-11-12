@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../states/store";
 
 const SudokuShape = () => {
   const rows = ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9"];
   const column = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"];
   const [focused, setFocused] = useState<string>("");
+  const [cellValue, setCellValue] = useState<number>();
   const cells: object[] = [];
   for (let i = 0; i < rows.length; i++) {
     for (let j = 0; j < column.length; j++) {
@@ -16,11 +19,24 @@ const SudokuShape = () => {
       });
     }
   }
+  const selectedNumber = useSelector(
+    (state: RootState) => state.pickingNumber.numberSelected
+  );
 
-  const focusCells = (e: React.ChangeEvent) => {
+  const focusCells = (e: React.MouseEvent<HTMLElement>) => {
     setFocused(e.currentTarget.id);
-    console.log(e.currentTarget.id);
+    if (selectedNumber) {
+      setCellValue(selectedNumber);
+      e.currentTarget.value = cellValue;
+    }
   };
+
+  useEffect(() => {
+    console.log("focused", focused);
+
+    // console.log(cellValue[focused]);
+    console.log(cells);
+  }, [focused]);
 
   return (
     <div className="Sudoku-shape-container">
@@ -44,7 +60,7 @@ const SudokuShape = () => {
                       focused === `${val1}${val2}` ? "focused" : ""
                     } `}
                     id={`${val1}${val2}`}
-                    // value={}
+                    // defaultValue={}
                     maxLength={1}
                     onClick={focusCells}
                   />
