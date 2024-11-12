@@ -14,7 +14,7 @@ html,
 body {
   height: 100%;
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -212,7 +212,9 @@ td.focused input {
 }
 
 /* styling sudoku inputs */
-
+.sudoku-inputs-container {
+  position: relative;
+}
 .number-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* Create a 3-column grid */
@@ -247,4 +249,94 @@ td.focused input {
 
 .new-game:hover {
   background-color: #7091d5 !important;
+}
+
+/* style new game menu */
+.new-game-menu {
+  width: 100%;
+  /* z-index: 100; */
+  position: absolute;
+  top: -20%;
+  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  border-radius: 5px;
+  transition: opacity 0.3s ease-in-out;
+  background-color: #fff;
+  line-height: 1.5;
+  display: none;
+}
+
+.new-game-menu.appear {
+  display: block;
+}
+
+.new-game-menu .head {
+  color: var(--dark-blue);
+  font-weight: 600;
+  text-align: center;
+}
+
+.new-game-menu .small {
+  font-size: 0.7rem;
+  color: var(--soft-gray);
+  text-align: center;
+  margin-top: 0.3rem;
+}
+
+.new-game-menu .mode-btn {
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  width: 100%;
+  background-color: var(--light-blue);
+  border-radius: 5px;
+  margin: 1rem 0;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+}
+
+.new-game-menu .level {
+  background-color: #f3f6fa;
+  border-radius: 5px;
+  position: relative;
+}
+
+.new-game-menu .level::before {
+  content: "";
+  border-width: 1rem;
+  border-style: solid;
+  border-color: #ffffff transparent transparent transparent;
+  position: absolute;
+  top: 109%;
+  left: 50%;
+}
+
+.new-game-menu .level .level-container {
+  padding: 0.7rem 1rem;
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--light-blue);
+  cursor: pointer;
+}
+
+.new-game-menu .level .level-container:not(:last-child) {
+  border-bottom: 1px solid var(--blur-blue);
+}
+
+.new-game-menu .level .level-container:hover {
+  border-radius: 5px;
+  background-color: var(--blur-blue);
+}
+
+.new-game-menu .level .level-container li {
+  width: 7%;
+}
+
+.new-game-menu .level .level-container li img {
+  width: 100%;
 }
