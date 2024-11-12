@@ -1,15 +1,25 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateLeft } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setNumber } from "../states/pickedNumber";
 
 const SudokuInputs = () => {
   const [newGame, setNewGame] = useState(false);
   const numbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const dispatch = useDispatch();
+
+  const pickedNumber = (e: React.MouseEvent<HTMLLIElement>) => {
+    dispatch(setNumber(Number(e.currentTarget.dataset?.val)));
+  };
+
   return (
     <div className="sudoku-inputs-container">
       <ul className="number-container">
         {numbers.map((val, key) => (
-          <li key={key}>{val}</li>
+          <li key={key} data-val={val} onClick={pickedNumber}>
+            {val}
+          </li>
         ))}
         <li
           className="new-game"
