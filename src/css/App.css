@@ -8,6 +8,7 @@
   --hover-effect: #f1f4f8;
   --blur-blue: #eaeef4;
   --focused-cell: #bbdefb;
+  --focused-other: #e2ebf3;
 }
 
 html,
@@ -127,8 +128,12 @@ input[type="text"]:focus {
   color: var(--dark-blue);
 }
 
-.table-shape input.focused {
+.table-shape input.focused.current {
   background-color: var(--focused-cell);
+}
+
+.table-shape input.focused {
+  background-color: var(--focused-other);
 }
 
 tr.focused td input,
@@ -214,6 +219,8 @@ td.focused input {
 /* styling sudoku inputs */
 .sudoku-inputs-container {
   position: relative;
+  cursor: default;
+  user-select: none;
 }
 .number-container {
   display: grid;
