@@ -35,6 +35,31 @@ const generateEmptyBoard = (): Cell[][] => {
   return board;
 };
 
+const isValidPlacement = (
+  board: Cell[][],
+  row: number,
+  col: number,
+  num: number
+): boolean => {
+  // searching through the row or column
+  for (let i = 0; i < 9; i++) {
+    if (board[row][i].value === num || board[i][col].value === num)
+      return false;
+  }
+
+  const startRow = Math.floor(row / 3) * 3;
+  const startCol = Math.floor(col / 3) * 3;
+  // searching in the current block
+
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      // so here the startRow is rathe 0, 3, 6 so i add i which is 0 or 1 or 2 to seach through the block (0,1,2 --- 3, 4, 5 --- 6, 7, 8)
+      if (board[startRow + i][startCol + j].value === num) return false;
+    }
+  }
+  return true;
+};
+
 const SudokuShape = () => {
   const [board, setBoard] = useState<Cell[][]>([]);
   const [focused, setFocused] = useState<string>();
