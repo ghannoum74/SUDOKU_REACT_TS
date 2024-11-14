@@ -60,6 +60,32 @@ const isValidPlacement = (
   return true;
 };
 
+// implement the backtracking algo to solve the sudoku board
+const solveSudoku = (board: Cell[][]): boolean => {
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      if (board[row][col].value === null) {
+        for (let num = 1; num <= 9; num++) {
+          const value = Math.floor(Math.random() * 9) + 1;
+          if (isValidPlacement(board, row, col, value)) {
+            board[row][col].value = value;
+            if (solveSudoku(board)) return true;
+            board[row][col].value = null;
+          }
+        }
+        return false;
+      }
+    }
+  }
+  return true;
+};
+
+const generateSudokuBoard = (): Cell[][] => {
+  const board = generateEmptyBoard();
+  solveSudoku(board);
+  return board;
+};
+
 const SudokuShape = () => {
   const [board, setBoard] = useState<Cell[][]>([]);
   const [focused, setFocused] = useState<string>();
@@ -87,7 +113,7 @@ const SudokuShape = () => {
   };
 
   useEffect(() => {
-    const newBoard = generateEmptyBoard();
+    const newBoard = generateSudokuBoard();
     setBoard(newBoard);
   }, []);
 
