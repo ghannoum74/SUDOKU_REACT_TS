@@ -13,6 +13,11 @@ interface Cell {
   matrix: string;
 }
 
+type PuzzleResult = {
+  emptyBoard: Cell[][];
+  board: Cell[][];
+};
+
 const generateEmptyBoard = (): Cell[][] => {
   const board: Cell[][] = [];
   for (let r = 0; r < 9; r++) {
@@ -64,8 +69,9 @@ const isValidPlacement = (
 const solveSudoku = (board: Cell[][]): boolean => {
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
+      // checking if the cell is empty
       if (board[row][col].value === null) {
-        for (let num = 1; num <= 9; num++) {
+        for (let num = 0; num < 9; num++) {
           const value = Math.floor(Math.random() * 9) + 1;
           if (isValidPlacement(board, row, col, value)) {
             board[row][col].value = value;
@@ -80,15 +86,51 @@ const solveSudoku = (board: Cell[][]): boolean => {
   return true;
 };
 
-const generateSudokuBoard = (): Cell[][] => {
-  const board = generateEmptyBoard();
+const generatePuzzle = (
+  board: Cell[][],
+  difficulty: "easy" | "medium" | "hard"
+): PuzzleResult => {
+  // get the solved board
   solveSudoku(board);
-  return board;
+
+  // working on clone for the actuall board
+  // in this case i used the deep copy to avoid the actuall variable effect by changing for the variable copy
+  const emptyBoard = JSON.parse(JSON.stringify(board));
+  let cellsToRemove = 0;
+
+  // et the difficulties
+  switch (difficulty) {
+    case "easy":
+      cellsToRemove = 30;
+      break;
+    case "medium":
+      cellsToRemove = 50;
+      break;
+    case "hard":
+      cellsToRemove = 60;
+      break;
+  }
+
+  // remove number rondomely
+  while (cellsToRemove > 0) {
+    // select randomaly row and columns to remove cells from
+    const row = Math.floor(Math.random() * 9);
+    const col = Math.floor(Math.random() * 9);
+    if (emptyBoard[row][col].value !== null) {
+      emptyBoard[row][col].value = null;
+      cellsToRemove--;
+    }
+  }
+
+  return { emptyBoard, board };
 };
 
 const SudokuShape = () => {
   const [board, setBoard] = useState<Cell[][]>([]);
   const [focused, setFocused] = useState<string>();
+  const [solvedBoard, setSolvedBoard] = useState<Cell[][]>([]);
+  const [correctValue, setCorrectValue] = useState<Set<string>>(new Set());
+  const [wrongValue, setWrongValue] = useState<Set<string>>(new Set());
 
   const selectedNumber = useSelector(
     (state: RootState) => state.pickingNumber.numberSelected
@@ -109,12 +151,34 @@ const SudokuShape = () => {
       e.target.value.charCodeAt(0) > 57
     ) {
       e.target.value = "";
+    } else {
+      // console.log(solvedBoard);
+      const row: number = Number(e.currentTarget.dataset.row) - 1;
+      const column: number = Number(e.currentTarget.dataset.column) - 1;
+      const id: string = e.currentTarget.id;
+      if (solvedBoard[row][column].value === Number(e.currentTarget.value)) {
+        if (wrongValue.has(id)) {
+          setWrongValue(
+            (prev) => new Set([...prev].filter((value) => value !== id))
+          );
+        }
+        setCorrectValue((prev) => new Set([...prev, id]));
+      } else {
+        if (correctValue.has(id)) {
+          setCorrectValue(
+            (prev) => new Set([...prev].filter((value) => value !== id))
+          );
+        }
+        setWrongValue((prev) => new Set([...prev, id]));
+      }
     }
   };
 
   useEffect(() => {
-    const newBoard = generateSudokuBoard();
-    setBoard(newBoard);
+    const board = generateEmptyBoard();
+    const newBoard = generatePuzzle(board, "easy");
+    setBoard(newBoard.emptyBoard);
+    setSolvedBoard(newBoard.board);
   }, []);
 
   return (
@@ -134,16 +198,18 @@ const SudokuShape = () => {
                       focused?.charAt(1) === cell.matrix.charAt(1)
                         ? "focused"
                         : ""
-                    }${focused === cell.matrix ? " current" : ""} `}
+                    }${focused === cell.matrix ? " current" : ""} ${
+                      correctValue.has(cell.id) ? "correctValue" : ""
+                    }${wrongValue.has(cell.id) ? "wrongValue" : ""}`}
                     id={cell.id}
-                    value={cell.value ?? ""}
+                    defaultValue={cell.value ?? ""}
                     data-matrix={`${cell.row}${cell.column}${cell.block}`}
                     data-row={cell.row}
                     data-column={cell.column}
                     data-block={cell.block}
                     maxLength={1}
                     onClick={focusCells}
-                    onInput={handleInputType}
+                    onChange={handleInputType}
                   />
                 </td>
               ))}
