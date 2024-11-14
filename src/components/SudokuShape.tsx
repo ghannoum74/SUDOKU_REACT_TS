@@ -1,83 +1,98 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../states/store";
+// import { setNumber } from "../states/pickedNumber";
 
-const SudokuShape = () => {
-  // const rows = ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9"];
-  // const column = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"];
-  const [focused, setFocused] = useState<string>();
-  // const [focused, setFocusedOther] = useState<string>();
-  const [cellValue, setCellValue] = useState<number>();
-  const cells: object[] = [];
-  const uiData: object[] = [];
-  for (let i = 0; i < 9; i++) {
-    for (let j = 0; j < 9; j++) {
-      cells.push({
-        value: undefined,
+interface Cell {
+  value: number | null;
+  focused: boolean;
+  id: string;
+  row: number;
+  column: number;
+  block: number;
+  matrix: string;
+}
+
+const generateEmptyBoard = (): Cell[][] => {
+  const board: Cell[][] = [];
+  for (let r = 0; r < 9; r++) {
+    const row: Cell[] = [];
+    for (let cell = 0; cell < 9; cell++) {
+      row.push({
+        value: null,
         focused: false,
-        id: `r${i}c${j + 1}`,
-        row: i + 1,
-        column: j + 1,
-        block: Math.floor(i / 3) * 3 + Math.floor(j / 3) + 1,
-        matrix: `${i + 1}${j + 1}${
-          Math.floor(i / 3) * 3 + Math.floor(j / 3) + 1
+        id: `r${r}c${cell + 1}`,
+        row: r + 1,
+        column: cell + 1,
+        block: Math.floor(r / 3) * 3 + Math.floor(cell / 3) + 1,
+        matrix: `${r + 1}${cell + 1}${
+          Math.floor(r / 3) * 3 + Math.floor(cell / 3) + 1
         }`,
       });
     }
+    board.push(row);
   }
+  return board;
+};
 
-  for (let i = 0; i < 81; i += 9) {
-    uiData.push(cells.slice(i, i + 9));
-  }
+const SudokuShape = () => {
+  const [board, setBoard] = useState<Cell[][]>([]);
+  const [focused, setFocused] = useState<string>();
 
   const selectedNumber = useSelector(
     (state: RootState) => state.pickingNumber.numberSelected
   );
 
   const focusCells = (e: React.MouseEvent<HTMLElement>) => {
-    // console.log(e.currentTarget.id);
-    // console.log(e.currentTarget.dataset.matrix);
     setFocused(e.currentTarget.dataset.matrix);
+
     if (selectedNumber) {
-      setCellValue(selectedNumber);
+      const target = e.currentTarget as HTMLInputElement;
+      target.value = selectedNumber.toString();
     }
   };
 
-  // const handleHoverEffect = (e: React.MouseEvent<HTMLElement>) => {};
+  const handleInputType = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (
+      e.target.value.charCodeAt(0) < 49 ||
+      e.target.value.charCodeAt(0) > 57
+    ) {
+      e.target.value = "";
+    }
+  };
 
   useEffect(() => {
-    console.log(typeof focused);
-
-    // console.log(cellValue[focused]);
-    // console.log(cells);
-  }, [focused]);
+    const newBoard = generateEmptyBoard();
+    setBoard(newBoard);
+  }, []);
 
   return (
     <div className="Sudoku-shape-container">
       <table className="table-shape">
         <tbody>
-          {uiData.map((val1, key) => (
+          {board.map((row, key) => (
             <tr key={key} id={`${key}`}>
-              {val1.map((val2, key) => (
-                <td key={key} id={val2.id}>
+              {row.map((cell, key) => (
+                <td key={key} id={cell.id}>
                   <input
                     type="text"
                     className={`${
                       focused?.charAt(focused.length - 1) ===
-                        val2.matrix.charAt(val2.matrix.length - 1) ||
-                      focused?.charAt(0) === val2.matrix.charAt(0) ||
-                      focused?.charAt(1) === val2.matrix.charAt(1)
+                        cell.matrix.charAt(cell.matrix.length - 1) ||
+                      focused?.charAt(0) === cell.matrix.charAt(0) ||
+                      focused?.charAt(1) === cell.matrix.charAt(1)
                         ? "focused"
                         : ""
-                    }${focused === val2.matrix ? " current" : ""} `}
-                    id={val2.id}
-                    value={focused === val2.id ? cellValue : undefined}
-                    data-matrix={`${val2.row}${val2.column}${val2.block}`}
-                    data-row={val2.row}
-                    data-column={val2.column}
-                    data-block={val2.block}
+                    }${focused === cell.matrix ? " current" : ""} `}
+                    id={cell.id}
+                    value={cell.value ?? ""}
+                    data-matrix={`${cell.row}${cell.column}${cell.block}`}
+                    data-row={cell.row}
+                    data-column={cell.column}
+                    data-block={cell.block}
                     maxLength={1}
                     onClick={focusCells}
+                    onInput={handleInputType}
                   />
                 </td>
               ))}
