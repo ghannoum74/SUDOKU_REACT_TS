@@ -11,6 +11,7 @@ interface Cell {
   column: number;
   block: number;
   matrix: string;
+  unchangebale: boolean;
 }
 
 type PuzzleResult = {
@@ -33,6 +34,7 @@ const generateEmptyBoard = (): Cell[][] => {
         matrix: `${r + 1}${cell + 1}${
           Math.floor(r / 3) * 3 + Math.floor(cell / 3) + 1
         }`,
+        unchangebale: true,
       });
     }
     board.push(row);
@@ -118,6 +120,7 @@ const generatePuzzle = (
     const col = Math.floor(Math.random() * 9);
     if (emptyBoard[row][col].value !== null) {
       emptyBoard[row][col].value = null;
+      emptyBoard[row][col].unchangebale = false;
       cellsToRemove--;
     }
   }
@@ -179,6 +182,9 @@ const SudokuShape = () => {
     const newBoard = generatePuzzle(board, "easy");
     setBoard(newBoard.emptyBoard);
     setSolvedBoard(newBoard.board);
+
+    // set the first cell focused by default
+    setFocused("111");
   }, []);
 
   return (
@@ -210,6 +216,7 @@ const SudokuShape = () => {
                     maxLength={1}
                     onClick={focusCells}
                     onChange={handleInputType}
+                    readOnly={cell.unchangebale ? true : false}
                   />
                 </td>
               ))}
