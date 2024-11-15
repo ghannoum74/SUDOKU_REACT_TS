@@ -67,20 +67,31 @@ const isValidPlacement = (
   return true;
 };
 
+// this is to get rondom array contain number from 1 to 9 but with shuffling index
+const getShuffledNumbers = (): number[] => {
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  for (let i = numbers.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+  }
+  return numbers;
+};
+
 // implement the backtracking algo to solve the sudoku board
 const solveSudoku = (board: Cell[][]): boolean => {
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
-      // checking if the cell is empty
+      // Check if the cell is empty
       if (board[row][col].value === null) {
-        for (let num = 0; num < 9; num++) {
-          const value = Math.floor(Math.random() * 9) + 1;
-          if (isValidPlacement(board, row, col, value)) {
-            board[row][col].value = value;
+        const shuffledNumbers = getShuffledNumbers();
+        for (const num of shuffledNumbers) {
+          if (isValidPlacement(board, row, col, num)) {
+            board[row][col].value = num;
             if (solveSudoku(board)) return true;
             board[row][col].value = null;
           }
         }
+        // If no valid number is found, return false to backtrack
         return false;
       }
     }
@@ -120,6 +131,8 @@ const generatePuzzle = (
     const col = Math.floor(Math.random() * 9);
     if (emptyBoard[row][col].value !== null) {
       emptyBoard[row][col].value = null;
+
+      // so the hidden cell can be changebale
       emptyBoard[row][col].unchangebale = false;
       cellsToRemove--;
     }
