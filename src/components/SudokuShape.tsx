@@ -74,6 +74,7 @@ const getShuffledNumbers = (): number[] => {
     const j = Math.floor(Math.random() * (i + 1));
     [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
   }
+
   return numbers;
 };
 
@@ -100,10 +101,10 @@ const solveSudoku = (board: Cell[][]): boolean => {
 };
 
 const generatePuzzle = (
-  board: Cell[][],
-  difficulty: "easy" | "medium" | "hard"
+  difficulty: "easy" | "medium" | "hard" | ""
 ): PuzzleResult => {
   // get the solved board
+  const board = generateEmptyBoard();
   solveSudoku(board);
 
   // working on clone for the actuall board
@@ -115,13 +116,19 @@ const generatePuzzle = (
   switch (difficulty) {
     case "easy":
       cellsToRemove = 30;
+
       break;
     case "medium":
       cellsToRemove = 50;
+
       break;
     case "hard":
       cellsToRemove = 60;
       break;
+    default: {
+      cellsToRemove = 30;
+      break;
+    }
   }
 
   // remove number rondomely
@@ -151,6 +158,9 @@ const SudokuShape = () => {
   const selectedNumber = useSelector(
     (state: RootState) => state.pickingNumber.numberSelected
   );
+  const difficulty = useSelector(
+    (state: RootState) => state.chosingDifficulty.difficulty
+  );
 
   const focusCells = (e: React.MouseEvent<HTMLElement>) => {
     setFocused(e.currentTarget.dataset.matrix);
@@ -162,13 +172,13 @@ const SudokuShape = () => {
   };
 
   const handleInputType = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
     if (
       e.target.value.charCodeAt(0) < 49 ||
       e.target.value.charCodeAt(0) > 57
     ) {
       e.target.value = "";
     } else {
-      // console.log(solvedBoard);
       const row: number = Number(e.currentTarget.dataset.row) - 1;
       const column: number = Number(e.currentTarget.dataset.column) - 1;
       const id: string = e.currentTarget.id;
@@ -191,14 +201,14 @@ const SudokuShape = () => {
   };
 
   useEffect(() => {
-    const board = generateEmptyBoard();
-    const newBoard = generatePuzzle(board, "easy");
+    const newBoard = generatePuzzle(difficulty);
     setBoard(newBoard.emptyBoard);
+    console.log(newBoard.emptyBoard);
     setSolvedBoard(newBoard.board);
 
     // set the first cell focused by default
     setFocused("111");
-  }, []);
+  }, [difficulty]);
 
   return (
     <div className="Sudoku-shape-container">
@@ -221,7 +231,7 @@ const SudokuShape = () => {
                       correctValue.has(cell.id) ? "correctValue" : ""
                     }${wrongValue.has(cell.id) ? "wrongValue" : ""}`}
                     id={cell.id}
-                    defaultValue={cell.value ?? ""}
+                    value={cell.value ?? ""}
                     data-matrix={`${cell.row}${cell.column}${cell.block}`}
                     data-row={cell.row}
                     data-column={cell.column}
