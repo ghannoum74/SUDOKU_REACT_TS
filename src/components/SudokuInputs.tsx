@@ -3,14 +3,20 @@ import { faRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setNumber } from "../states/pickedNumber";
+import { chooseDifficulty } from "../states/difficultyGame";
 
 const SudokuInputs = () => {
+  type Level = "easy" | "medium" | "hard" | "";
   const [newGame, setNewGame] = useState(false);
   const numbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const dispatch = useDispatch();
 
   const pickedNumber = (e: React.MouseEvent<HTMLLIElement>) => {
     dispatch(setNumber(Number(e.currentTarget.dataset?.val)));
+  };
+
+  const handleLevel = (e: React.MouseEvent<HTMLElement>) => {
+    dispatch(chooseDifficulty(e.currentTarget.id as Level));
   };
 
   return (
@@ -35,19 +41,19 @@ const SudokuInputs = () => {
           <div className="small">Current game progress will be lost</div>
           <div className="mode-btn">Classic</div>
           <ul className="level">
-            <div className="level-container">
+            <div className="level-container" id="easy" onClick={handleLevel}>
               <li>
                 <img src="https://cdn-icons-png.flaticon.com/512/4295/4295600.png" />
               </li>
               <li>Easy</li>
             </div>
-            <div className="level-container">
+            <div className="level-container" id="medium" onClick={handleLevel}>
               <li>
                 <img src="https://cdn-icons-png.flaticon.com/512/4295/4295600.png" />
               </li>
               <li>Medium</li>
             </div>
-            <div className="level-container">
+            <div className="level-container" id="hard" onClick={handleLevel}>
               <li>
                 <img src="https://cdn-icons-png.flaticon.com/512/4295/4295600.png" />
               </li>
