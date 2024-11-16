@@ -6,7 +6,7 @@ import { setNumber } from "../states/pickedNumber";
 import { chooseDifficulty } from "../states/difficultyGame";
 
 const SudokuInputs = () => {
-  type Level = "easy" | "medium" | "hard" | "";
+  type Level = "easy" | "medium" | "hard" | "expert" | "";
   const [newGame, setNewGame] = useState(false);
   const numbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const dispatch = useDispatch();
@@ -59,7 +59,13 @@ const SudokuInputs = () => {
               </li>
               <li>Hard</li>
             </div>
-            <div className="level-container">
+            <div className="level-container" id="expert" onClick={handleLevel}>
+              <li>
+                <img src="https://cdn-icons-png.flaticon.com/512/4295/4295600.png" />
+              </li>
+              <li>Expert</li>
+            </div>
+            {/* <div className="level-container" id="restart" onClick={handleLevel}>
               <li>
                 <FontAwesomeIcon
                   icon={faRotateLeft}
@@ -68,7 +74,7 @@ const SudokuInputs = () => {
                 />
               </li>
               <li>restart</li>
-            </div>
+            </div> */}
           </ul>
         </div>
       )}
