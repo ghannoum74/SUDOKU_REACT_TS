@@ -101,10 +101,11 @@ const solveSudoku = (board: Cell[][]): boolean => {
 };
 
 const generatePuzzle = (
-  difficulty: "easy" | "medium" | "hard" | ""
+  difficulty: "easy" | "medium" | "hard" | "expert" | ""
 ): PuzzleResult => {
   // get the solved board
   const board = generateEmptyBoard();
+
   solveSudoku(board);
 
   // working on clone for the actuall board
@@ -124,6 +125,9 @@ const generatePuzzle = (
       break;
     case "hard":
       cellsToRemove = 60;
+      break;
+    case "expert":
+      cellsToRemove = 75;
       break;
     default: {
       cellsToRemove = 30;
@@ -172,16 +176,31 @@ const SudokuShape = () => {
   };
 
   const handleInputType = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
     if (
-      e.target.value.charCodeAt(0) < 49 ||
+      // so it allows the clearing
+      (e.target.value !== "" && e.target.value.charCodeAt(0) < 49) ||
       e.target.value.charCodeAt(0) > 57
     ) {
       e.target.value = "";
+      return;
+    }
+    const updatedBoard = [...board];
+    const row: number = Number(e.currentTarget.dataset.row) - 1;
+    const column: number = Number(e.currentTarget.dataset.column) - 1;
+    const id: string = e.currentTarget.id;
+
+    if (e.target.value === "") {
+      updatedBoard[row][column].value = null;
+
+      // setCorrectValue(
+      //   (prev) => new Set([...prev].filter((value) => value !== id))
+      // );
+      // setWrongValue(
+      //   (prev) => new Set([...prev].filter((value) => value !== id))
+      // );
     } else {
-      const row: number = Number(e.currentTarget.dataset.row) - 1;
-      const column: number = Number(e.currentTarget.dataset.column) - 1;
-      const id: string = e.currentTarget.id;
+      updatedBoard[row][column].value = Number(e.currentTarget.value);
+
       if (solvedBoard[row][column].value === Number(e.currentTarget.value)) {
         if (wrongValue.has(id)) {
           setWrongValue(
@@ -198,6 +217,7 @@ const SudokuShape = () => {
         setWrongValue((prev) => new Set([...prev, id]));
       }
     }
+    setBoard(updatedBoard);
   };
 
   useEffect(() => {
@@ -205,6 +225,10 @@ const SudokuShape = () => {
     setBoard(newBoard.emptyBoard);
     console.log(newBoard.emptyBoard);
     setSolvedBoard(newBoard.board);
+
+    // reset the values to remove all the classes style
+    setWrongValue(new Set());
+    setCorrectValue(new Set());
 
     // set the first cell focused by default
     setFocused("111");
