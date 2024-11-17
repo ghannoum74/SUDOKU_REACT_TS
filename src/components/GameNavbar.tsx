@@ -3,11 +3,10 @@ import { faCirclePause, faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { chooseDifficulty } from "../states/difficultyGame";
+import { RootState } from "../states/store";
 
 const GameNavbar = () => {
   type Level = "easy" | "medium" | "hard" | "expert" | "";
-  const [mistakesNb, setMistakeNb] = useState(0);
-  const [score, setScore] = useState(0);
   const [clickable, setClickable] = useState<string>("Easy");
   const [seconds, setSeconds] = useState<number>(0);
   const [minutes, setMinutes] = useState<number>(0);
@@ -15,6 +14,13 @@ const GameNavbar = () => {
   const [paused, setPaused] = useState<boolean>(false);
   const difficulty: string[] = ["Easy", "Medium", "Hard", "Expert"];
   const dispatch = useDispatch();
+
+  const mistakesNb = useSelector(
+    (state: RootState) => state.mistakesNumber.mistakesNb
+  );
+
+  const score = useSelector((state: RootState) => state.score.score);
+
   useEffect(() => {
     if (paused) {
       return;
@@ -38,7 +44,7 @@ const GameNavbar = () => {
     }
 
     return () => clearInterval(interval);
-  }, [seconds, paused]);
+  }, [seconds, paused, hours, minutes]);
 
   const handleLevel = (e: React.MouseEvent<HTMLElement>) => {
     setClickable(String(e.currentTarget.id));
