@@ -4,6 +4,7 @@ import { RootState } from "../states/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { setIsPause } from "../states/pauseGame";
+import { incrementMistakeNumber } from "../states/mistakesNumber";
 // import { setNumber } from "../states/pickedNumber";
 
 interface Cell {
@@ -155,9 +156,14 @@ const generatePuzzle = (
   return { emptyBoard, board };
 };
 
-const SudokuShape = () => {
+interface SudokuShapeProps {
+  setGameOver: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
   const [board, setBoard] = useState<Cell[][]>([]);
   const [focused, setFocused] = useState<string>();
+
   const [solvedBoard, setSolvedBoard] = useState<Cell[][]>([]);
   const [correctValue, setCorrectValue] = useState<Set<string>>(new Set());
   const [wrongValue, setWrongValue] = useState<Set<string>>(new Set());
@@ -171,6 +177,10 @@ const SudokuShape = () => {
   );
 
   const isPaused = useSelector((state: RootState) => state.isPaused.isPaused);
+
+  const mistakesNumber = useSelector(
+    (state: RootState) => state.mistakesNumber.mistakesNb
+  );
 
   const focusCells = (e: React.MouseEvent<HTMLElement>) => {
     setFocused(e.currentTarget.dataset.matrix);
@@ -201,13 +211,25 @@ const SudokuShape = () => {
       updatedBoard[row][column].value = Number(e.currentTarget.value);
 
       if (solvedBoard[row][column].value === Number(e.currentTarget.value)) {
+        // remove the number from the wrong section
         if (wrongValue.has(id)) {
           setWrongValue(
             (prev) => new Set([...prev].filter((value) => value !== id))
           );
         }
+        // set the number to be correct
         setCorrectValue((prev) => new Set([...prev, id]));
       } else {
+        // if the number is wrong increment the mistake number
+        // but first check if this is the last chance for mistakes
+        if (mistakesNumber === 2) {
+          setGameOver(true);
+          // to remove the focus on the last cell focused
+          e.currentTarget.blur();
+          // updatedBoard[row][column].value = solvedBoard[row][column].value;
+        }
+        dispatch(incrementMistakeNumber());
+
         if (correctValue.has(id)) {
           setCorrectValue(
             (prev) => new Set([...prev].filter((value) => value !== id))
