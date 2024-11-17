@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../states/store";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { setIsPause } from "../states/pauseGame";
 // import { setNumber } from "../states/pickedNumber";
 
 interface Cell {
@@ -158,6 +161,7 @@ const SudokuShape = () => {
   const [solvedBoard, setSolvedBoard] = useState<Cell[][]>([]);
   const [correctValue, setCorrectValue] = useState<Set<string>>(new Set());
   const [wrongValue, setWrongValue] = useState<Set<string>>(new Set());
+  const dispatch = useDispatch();
 
   const selectedNumber = useSelector(
     (state: RootState) => state.pickingNumber.numberSelected
@@ -165,6 +169,8 @@ const SudokuShape = () => {
   const difficulty = useSelector(
     (state: RootState) => state.chosingDifficulty.difficulty
   );
+
+  const isPaused = useSelector((state: RootState) => state.isPaused.isPaused);
 
   const focusCells = (e: React.MouseEvent<HTMLElement>) => {
     setFocused(e.currentTarget.dataset.matrix);
@@ -177,7 +183,7 @@ const SudokuShape = () => {
 
   const handleInputType = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (
-      // so it allows the clearing
+      // so it allows the clear button
       (e.target.value !== "" && e.target.value.charCodeAt(0) < 49) ||
       e.target.value.charCodeAt(0) > 57
     ) {
@@ -191,13 +197,6 @@ const SudokuShape = () => {
 
     if (e.target.value === "") {
       updatedBoard[row][column].value = null;
-
-      // setCorrectValue(
-      //   (prev) => new Set([...prev].filter((value) => value !== id))
-      // );
-      // setWrongValue(
-      //   (prev) => new Set([...prev].filter((value) => value !== id))
-      // );
     } else {
       updatedBoard[row][column].value = Number(e.currentTarget.value);
 
@@ -223,7 +222,7 @@ const SudokuShape = () => {
   useEffect(() => {
     const newBoard = generatePuzzle(difficulty);
     setBoard(newBoard.emptyBoard);
-    console.log(newBoard.emptyBoard);
+    // console.log(newBoard.emptyBoard);
     setSolvedBoard(newBoard.board);
 
     // reset the values to remove all the classes style
@@ -235,7 +234,21 @@ const SudokuShape = () => {
   }, [difficulty]);
 
   return (
-    <div className="Sudoku-shape-container">
+    <div className={`Sudoku-shape-container ${isPaused ? "paused" : ""}`}>
+      {isPaused ? (
+        <>
+          <div
+            className="pause-icon-container"
+            onClick={() => dispatch(setIsPause())}
+          >
+            <FontAwesomeIcon
+              icon={faPlay}
+              size="xl"
+              style={{ color: "#ffffff", width: "24px" }}
+            />
+          </div>
+        </>
+      ) : null}
       <table className="table-shape">
         <tbody>
           {board.map((row, key) => (
@@ -253,7 +266,9 @@ const SudokuShape = () => {
                         : ""
                     }${focused === cell.matrix ? " current" : ""} ${
                       correctValue.has(cell.id) ? "correctValue" : ""
-                    }${wrongValue.has(cell.id) ? "wrongValue" : ""}`}
+                    }${wrongValue.has(cell.id) ? "wrongValue" : ""}${
+                      isPaused ? "paused" : ""
+                    }`}
                     id={cell.id}
                     value={cell.value ?? ""}
                     data-matrix={`${cell.row}${cell.column}${cell.block}`}
