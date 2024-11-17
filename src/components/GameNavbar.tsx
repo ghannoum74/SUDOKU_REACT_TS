@@ -6,7 +6,11 @@ import { chooseDifficulty } from "../states/difficultyGame";
 import { RootState } from "../states/store";
 import { setIsPause } from "../states/pauseGame";
 
-const GameNavbar = () => {
+interface gameNavState {
+  gameOver: boolean;
+}
+
+const GameNavbar: React.FC<gameNavState> = ({ gameOver }) => {
   type Level = "easy" | "medium" | "hard" | "expert" | "";
   const [clickable, setClickable] = useState<string>("Easy");
   const [seconds, setSeconds] = useState<number>(0);
@@ -25,7 +29,7 @@ const GameNavbar = () => {
 
   useEffect(() => {
     // to stop the timer
-    if (isPaused) {
+    if (isPaused || gameOver) {
       return;
     }
     const interval = setInterval(() => {
@@ -47,7 +51,7 @@ const GameNavbar = () => {
     }
 
     return () => clearInterval(interval);
-  }, [seconds, isPaused, hours, minutes]);
+  }, [seconds, isPaused, hours, minutes, gameOver]);
 
   const handleLevel = (e: React.MouseEvent<HTMLElement>) => {
     setClickable(String(e.currentTarget.id));
