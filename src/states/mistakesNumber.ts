@@ -12,12 +12,16 @@ export const setMistakes = createSlice({
   name: "mistakesNumber",
   initialState,
   reducers: {
-    setMistakeNumber: (state) => {
+    incrementMistakeNumber: (state) => {
       state.mistakesNb += 1;
+    },
+    decrementMistakeNumber: (state) => {
+      state.mistakesNb -= 1;
     },
   },
 });
 
 // Correct the export here:
-export const { setMistakeNumber } = setMistakes.actions;
+export const { incrementMistakeNumber, decrementMistakeNumber } =
+  setMistakes.actions;
 export default setMistakes.reducer;
