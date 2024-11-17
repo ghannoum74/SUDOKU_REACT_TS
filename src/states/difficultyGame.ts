@@ -5,7 +5,7 @@ type chooseDifficulty = {
 };
 
 const initialState: chooseDifficulty = {
-  difficulty: "",
+  difficulty: "easy",
 };
 
 export const difficultyChoosing = createSlice({
