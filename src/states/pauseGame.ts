@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 type pauseType = {
   isPaused: boolean | false;
@@ -12,8 +12,8 @@ export const pauseGame = createSlice({
   name: "pauseGame",
   initialState,
   reducers: {
-    setIsPause: (state, action: PayloadAction<boolean>) => {
-      state.isPaused = action.payload;
+    setIsPause: (state) => {
+      state.isPaused = !state.isPaused;
     },
   },
 });
