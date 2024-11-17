@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { chooseDifficulty } from "../states/difficultyGame";
 import { RootState } from "../states/store";
+import { setIsPause } from "../states/pauseGame";
 
 const GameNavbar = () => {
   type Level = "easy" | "medium" | "hard" | "expert" | "";
@@ -11,7 +12,7 @@ const GameNavbar = () => {
   const [seconds, setSeconds] = useState<number>(0);
   const [minutes, setMinutes] = useState<number>(0);
   const [hours, setHours] = useState<number>(0);
-  const [paused, setPaused] = useState<boolean>(false);
+  // const [paused, setPaused] = useState<boolean>(false);
   const difficulty: string[] = ["Easy", "Medium", "Hard", "Expert"];
   const dispatch = useDispatch();
 
@@ -20,9 +21,11 @@ const GameNavbar = () => {
   );
 
   const score = useSelector((state: RootState) => state.score.score);
+  const isPaused = useSelector((state: RootState) => state.isPaused.isPaused);
 
   useEffect(() => {
-    if (paused) {
+    // to stop the timer
+    if (isPaused) {
       return;
     }
     const interval = setInterval(() => {
@@ -32,7 +35,7 @@ const GameNavbar = () => {
       setHours(0);
       setMinutes(0);
       setSeconds(0);
-      setPaused(true);
+      setIsPause();
     }
     if (seconds === 60) {
       setMinutes((min) => min + 1);
@@ -44,7 +47,7 @@ const GameNavbar = () => {
     }
 
     return () => clearInterval(interval);
-  }, [seconds, paused, hours, minutes]);
+  }, [seconds, isPaused, hours, minutes]);
 
   const handleLevel = (e: React.MouseEvent<HTMLElement>) => {
     setClickable(String(e.currentTarget.id));
@@ -88,14 +91,14 @@ const GameNavbar = () => {
             <span>
               <FontAwesomeIcon
                 className="pause-icon"
-                icon={paused ? faCirclePlay : faCirclePause}
+                icon={isPaused ? faCirclePlay : faCirclePause}
                 size="xl"
                 style={{
                   color: "rgb(203 212 225)",
                   cursor: "pointer",
                   marginLeft: "-0.3rem",
                 }}
-                onClick={() => setPaused((prev) => (prev ? false : true))}
+                onClick={() => dispatch(setIsPause())}
               />
             </span>
           </li>
