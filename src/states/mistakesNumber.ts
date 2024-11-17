@@ -9,7 +9,7 @@ const initialState: mistakenumber = {
 };
 
 export const setMistakes = createSlice({
-  name: "pickingNumber",
+  name: "mistakesNumber",
   initialState,
   reducers: {
     setMistakeNumber: (state, action: PayloadAction<number>) => {
