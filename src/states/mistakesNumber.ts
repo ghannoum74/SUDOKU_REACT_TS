@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 type mistakenumber = {
-  mistakesNb: number | null;
+  mistakesNb: number;
 };
 
 const initialState: mistakenumber = {
@@ -12,8 +12,8 @@ export const setMistakes = createSlice({
   name: "mistakesNumber",
   initialState,
   reducers: {
-    setMistakeNumber: (state, action: PayloadAction<number>) => {
-      state.mistakesNb = action.payload;
+    setMistakeNumber: (state) => {
+      state.mistakesNb += 1;
     },
   },
 });
