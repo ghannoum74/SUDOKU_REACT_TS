@@ -1,15 +1,20 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePause } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePause, faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { chooseDifficulty } from "../states/difficultyGame";
 
 const GameNavbar = () => {
+  type Level = "easy" | "medium" | "hard" | "expert" | "";
   const [mistakesNb, setMistakeNb] = useState(0);
   const [score, setScore] = useState(0);
-  const [clickable, setClickable] = useState("");
-  const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const [hours, setHours] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [clickable, setClickable] = useState<string>("Easy");
+  const [seconds, setSeconds] = useState<number>(0);
+  const [minutes, setMinutes] = useState<number>(0);
+  const [hours, setHours] = useState<number>(0);
+  const [paused, setPaused] = useState<boolean>(false);
+  const difficulty: string[] = ["Easy", "Medium", "Hard", "Expert"];
+  const dispatch = useDispatch();
   useEffect(() => {
     if (paused) {
       return;
@@ -34,14 +39,11 @@ const GameNavbar = () => {
 
     return () => clearInterval(interval);
   }, [seconds, paused]);
-  const difficulty: string[] = [
-    "Easy",
-    "Medium",
-    "Hard",
-    "Expert",
-    "Master",
-    "Extreme",
-  ];
+
+  const handleLevel = (e: React.MouseEvent<HTMLElement>) => {
+    setClickable(String(e.currentTarget.id));
+    dispatch(chooseDifficulty(e.currentTarget.id.toLowerCase() as Level));
+  };
 
   return (
     <div className="game-navbar-container">
@@ -50,8 +52,9 @@ const GameNavbar = () => {
         {difficulty.map((val, key) => (
           <li
             key={key}
+            id={val}
             className={`hovered-data ${val === clickable ? "clickable" : ""}`}
-            onClick={(e) => setClickable(e.target.dataset.val)}
+            onClick={handleLevel}
             data-val={val}
           >
             {val}
@@ -79,7 +82,7 @@ const GameNavbar = () => {
             <span>
               <FontAwesomeIcon
                 className="pause-icon"
-                icon={faCirclePause}
+                icon={paused ? faCirclePlay : faCirclePause}
                 size="xl"
                 style={{
                   color: "rgb(203 212 225)",
