@@ -3,6 +3,7 @@ import pickingNumberReducer from "./pickedNumber";
 import chooseDificulty from "./difficultyGame";
 import mistakesNumbers from "./mistakesNumber";
 import sudokuScore from "./score";
+import triggerPause from "./pauseGame";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     chosingDifficulty: chooseDificulty,
     mistakesNumber: mistakesNumbers,
     score: sudokuScore,
+    isPaused: triggerPause,
   },
 });
 
