@@ -5,11 +5,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { setIsPause } from "../states/pauseGame";
 import { incrementMistakeNumber } from "../states/mistakesNumber";
+import { setScore } from "../states/score";
 // import { setNumber } from "../states/pickedNumber";
 
 interface Cell {
   value: number | null;
-  focused: boolean;
+  calculate: boolean;
   id: string;
   row: number;
   column: number;
@@ -30,7 +31,7 @@ const generateEmptyBoard = (): Cell[][] => {
     for (let cell = 0; cell < 9; cell++) {
       row.push({
         value: null,
-        focused: false,
+        calculate: false,
         id: `r${r}c${cell + 1}`,
         row: r + 1,
         column: cell + 1,
@@ -210,6 +211,7 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
     } else {
       updatedBoard[row][column].value = Number(e.currentTarget.value);
 
+      // case if number is true
       if (solvedBoard[row][column].value === Number(e.currentTarget.value)) {
         // remove the number from the wrong section
         if (wrongValue.has(id)) {
@@ -219,6 +221,14 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
         }
         // set the number to be correct
         setCorrectValue((prev) => new Set([...prev, id]));
+
+        // this is to calculate the score
+        // it check firstly if this cell is already calculated so to avoid when user enter true value many time for the same cell the increment for score
+        if (e.currentTarget.dataset.calculate === "false") {
+          dispatch(setScore(difficulty));
+        }
+        // if not calculated so i set calculate to true for this cell
+        e.currentTarget.dataset.calculate = "true";
       } else {
         // if the number is wrong increment the mistake number
         // but first check if this is the last chance for mistakes
@@ -301,6 +311,7 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
                     onClick={focusCells}
                     onChange={handleInputType}
                     readOnly={cell.unchangebale ? true : false}
+                    data-calculate={cell.calculate}
                   />
                 </td>
               ))}
