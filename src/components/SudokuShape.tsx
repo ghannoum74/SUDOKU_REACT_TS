@@ -32,7 +32,7 @@ const generateEmptyBoard = (): Cell[][] => {
       row.push({
         value: null,
         calculate: false,
-        id: `r${r}c${cell + 1}`,
+        id: `r${r}c${cell}`,
         row: r + 1,
         column: cell + 1,
         block: Math.floor(r / 3) * 3 + Math.floor(cell / 3) + 1,
@@ -106,7 +106,7 @@ const solveSudoku = (board: Cell[][]): boolean => {
 };
 
 const generatePuzzle = (
-  difficulty: "easy" | "medium" | "hard" | "expert" | ""
+  difficulty: "easy" | "medium" | "hard" | "expert"
 ): PuzzleResult => {
   // get the solved board
   const board = generateEmptyBoard();
@@ -168,6 +168,7 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
   const [solvedBoard, setSolvedBoard] = useState<Cell[][]>([]);
   const [correctValue, setCorrectValue] = useState<Set<string>>(new Set());
   const [wrongValue, setWrongValue] = useState<Set<string>>(new Set());
+  const [mistakeNumber, setMistakeNumber] = useState<Set<string>>(new Set());
   const dispatch = useDispatch();
 
   const selectedNumber = useSelector(
@@ -192,6 +193,50 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
     }
   };
 
+  // return the number which caused the input number to be incorrect
+  const getTheMistakeCells = (
+    value: number,
+    board: Cell[][],
+    row: number,
+    column: number,
+    block: number
+  ) => {
+    console.log(row, column, block);
+    // reset the mistake number
+    setMistakeNumber(new Set());
+
+    // check the row
+
+    for (let i = 0; i < 9; i++) {
+      if (board[i][column].value === value) {
+        console.log(board[i][column].id);
+        setMistakeNumber((prev) => new Set([...prev, board[i][column].id]));
+      }
+    }
+    // check the column
+
+    for (let i = 0; i < 9; i++) {
+      if (board[row][i].value === value) {
+        console.log(board[row][i].id);
+        setMistakeNumber((prev) => new Set([...prev, board[row][i].id]));
+      }
+    }
+
+    const startRow = Math.floor(row / 3) * 3;
+    const startCol = Math.floor(column / 3) * 3;
+    // searching in the current block
+
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        // so here the startRow is rathe 0, 3, 6 so i add i which is 0 or 1 or 2 to seach through the block (0,1,2 --- 3, 4, 5 --- 6, 7, 8)
+        if (board[startRow + i][startCol + j].value === value)
+          setMistakeNumber(
+            (prev) => new Set([...prev, board[startRow + i][startCol + j].id])
+          );
+      }
+    }
+  };
+
   const handleInputType = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (
       // so it allows the clear button
@@ -204,10 +249,13 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
     const updatedBoard = [...board];
     const row: number = Number(e.currentTarget.dataset.row) - 1;
     const column: number = Number(e.currentTarget.dataset.column) - 1;
+    const block: number = Number(e.currentTarget.dataset.block) - 1;
     const id: string = e.currentTarget.id;
 
+    // when i clear the number reset the mistakNumbers
     if (e.target.value === "") {
       updatedBoard[row][column].value = null;
+      setMistakeNumber(new Set());
     } else {
       updatedBoard[row][column].value = Number(e.currentTarget.value);
 
@@ -230,6 +278,13 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
         // if not calculated so i set calculate to true for this cell
         e.currentTarget.dataset.calculate = "true";
       } else {
+        getTheMistakeCells(
+          Number(e.currentTarget.value),
+          updatedBoard,
+          row,
+          column,
+          block
+        );
         // if the number is wrong increment the mistake number
         // but first check if this is the last chance for mistakes
         if (mistakesNumber === 2) {
@@ -254,11 +309,12 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
   useEffect(() => {
     const newBoard = generatePuzzle(difficulty);
     setBoard(newBoard.emptyBoard);
-    // console.log(newBoard.emptyBoard);
+
     setSolvedBoard(newBoard.board);
 
     // reset the values to remove all the classes style
     setWrongValue(new Set());
+    console.log(mistakeNumber);
     setCorrectValue(new Set());
 
     // set the first cell focused by default
@@ -298,9 +354,9 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
                         : ""
                     }${focused === cell.matrix ? " current" : ""} ${
                       correctValue.has(cell.id) ? "correctValue" : ""
-                    }${wrongValue.has(cell.id) ? "wrongValue" : ""}${
+                    }${wrongValue.has(cell.id) ? "wrongValue" : ""} ${
                       isPaused ? "paused" : ""
-                    }`}
+                    }${mistakeNumber.has(cell.id) ? "mistakNumber" : ""}`}
                     id={cell.id}
                     value={cell.value ?? ""}
                     data-matrix={`${cell.row}${cell.column}${cell.block}`}
