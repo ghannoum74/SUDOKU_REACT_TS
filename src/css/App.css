@@ -115,9 +115,10 @@ input[type="text"]:focus {
 }
 
 .game-over .pupop {
+  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.2);
   background-color: #fff;
-  width: auto;
-  height: auto;
+  width: 50%;
+  /* height: 50%; */
   border-radius: 5px;
   display: flex;
   flex-direction: column;
@@ -241,6 +242,11 @@ input[type="text"]:focus {
 }
 .table-shape input.wrongValue {
   color: var(--wrong-value);
+  background-color: var(--wrong-cell);
+}
+.table-shape input.mistakNumber {
+  color: var(--wrong-value);
+  background-color: var(--wrong-cell);
 }
 
 .table-shape input.paused {
@@ -456,5 +462,75 @@ td.focused input {
 }
 
 .new-game-menu .level .level-container li img {
+  width: 100%;
+}
+
+/* styling the new game menu spetial in the game over component */
+.pupop-new-game-menu {
+  width: 100%;
+
+  padding: 1rem;
+  border-radius: 5px;
+  transition: opacity 0.3s ease-in-out;
+  background-color: #fff;
+  line-height: 1.5;
+}
+
+.pupop-new-game-menu .pupop-head {
+  color: var(--dark-blue);
+  font-weight: 600;
+  text-align: center;
+}
+
+.pupop-new-game-menu .pupop-small {
+  font-size: 0.7rem;
+  color: var(--soft-gray);
+  text-align: center;
+  margin-top: 0.3rem;
+}
+
+.pupop-new-game-menu .pupop-mode-btn {
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  width: 100%;
+  background-color: var(--light-blue);
+  border-radius: 5px;
+  margin: 1rem 0;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+}
+
+.pupop-new-game-menu .pupop-level {
+  background-color: #f3f6fa;
+  border-radius: 5px;
+}
+
+.pupop-new-game-menu .pupop-level .pupop-level-container {
+  padding: 0.7rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--light-blue);
+  cursor: pointer;
+}
+
+.pupop-new-game-menu .pupop-level .pupop-level-container:not(:last-child) {
+  border-bottom: 1px solid var(--blur-blue);
+}
+
+.pupop-new-game-menu .pupop-level .pupop-level-container:hover {
+  border-radius: 5px;
+  background-color: var(--blur-blue);
+}
+
+.pupop-new-game-menu .pupop-level .pupop-level-container li {
+  width: 7%;
+}
+
+.pupop-new-game-menu .pupop-level .pupop-level-container li img {
   width: 100%;
 }
