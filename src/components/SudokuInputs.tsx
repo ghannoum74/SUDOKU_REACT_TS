@@ -4,7 +4,7 @@ import { setNumber } from "../states/pickedNumber";
 import { chooseDifficulty } from "../states/difficultyGame";
 
 const SudokuInputs = () => {
-  type Level = "easy" | "medium" | "hard" | "expert" | "";
+  type Level = "easy" | "medium" | "hard" | "expert";
   const [newGame, setNewGame] = useState(false);
   const numbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const dispatch = useDispatch();
