@@ -11,7 +11,7 @@ interface gameNavState {
 }
 
 const GameNavbar: React.FC<gameNavState> = ({ gameOver }) => {
-  type Level = "easy" | "medium" | "hard" | "expert" | "";
+  type Level = "easy" | "medium" | "hard" | "expert";
   const [clickable, setClickable] = useState<string>("Easy");
   const [seconds, setSeconds] = useState<number>(0);
   const [minutes, setMinutes] = useState<number>(0);
