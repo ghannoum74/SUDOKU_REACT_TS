@@ -255,7 +255,6 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
     // when i clear the number reset the mistakNumbers
     if (e.target.value === "") {
       updatedBoard[row][column].value = null;
-      setMistakeNumber(new Set());
     } else {
       updatedBoard[row][column].value = Number(e.currentTarget.value);
 
@@ -289,6 +288,7 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
         // but first check if this is the last chance for mistakes
         if (mistakesNumber === 2) {
           setGameOver(true);
+          setMistakeNumber(new Set());
           // to remove the focus on the last cell focused
           e.currentTarget.blur();
           // updatedBoard[row][column].value = solvedBoard[row][column].value;
@@ -309,12 +309,9 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
   useEffect(() => {
     const newBoard = generatePuzzle(difficulty);
     setBoard(newBoard.emptyBoard);
-
     setSolvedBoard(newBoard.board);
-
     // reset the values to remove all the classes style
     setWrongValue(new Set());
-    console.log(mistakeNumber);
     setCorrectValue(new Set());
 
     // set the first cell focused by default
