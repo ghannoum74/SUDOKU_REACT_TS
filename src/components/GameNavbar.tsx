@@ -1,25 +1,21 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePause, faCirclePlay } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { chooseDifficulty } from "../states/difficultyGame";
 import { RootState } from "../states/store";
-import { setIsPause } from "../states/pauseGame";
+import { resetTimer, setPause, startTimer } from "../states/timer";
 
-interface gameNavState {
-  gameOver: boolean;
-}
-
-const GameNavbar: React.FC<gameNavState> = ({ gameOver }) => {
+const GameNavbar = () => {
   type Level = "easy" | "medium" | "hard" | "expert";
 
-  const [seconds, setSeconds] = useState<number>(0);
-  const [minutes, setMinutes] = useState<number>(0);
-  const [hours, setHours] = useState<number>(0);
-  // const [paused, setPaused] = useState<boolean>(false);
   // to avoid re create the same array for each time
   const difficulty = ["Easy", "Medium", "Hard", "Expert"];
   const dispatch = useDispatch();
+  const seconds = useSelector((state: RootState) => state.timer.seconds);
+  const minutes = useSelector((state: RootState) => state.timer.minutes);
+  const hours = useSelector((state: RootState) => state.timer.hours);
+  const isGameOver = useSelector((state: RootState) => state.timer.isGameOver);
 
   const mistakesNb = useSelector(
     (state: RootState) => state.mistakesNumber.mistakesNb
@@ -29,44 +25,26 @@ const GameNavbar: React.FC<gameNavState> = ({ gameOver }) => {
   );
 
   const score = useSelector((state: RootState) => state.score.score);
-  const isPaused = useSelector((state: RootState) => state.isPaused.isPaused);
+  const isPaused = useSelector((state: RootState) => state.timer.isPaused);
 
   useEffect(() => {
     // to stop the timer
-    if (isPaused || gameOver) {
+    if (isPaused || isGameOver) {
       return;
     }
     const interval = setInterval(() => {
-      setSeconds((prev) => prev + 1);
+      dispatch(startTimer());
     }, 1000);
 
-    if (hours === 24) {
-      setHours(0);
-      setMinutes(0);
-      setSeconds(0);
-      setIsPause();
-    }
-    if (seconds === 60) {
-      setMinutes((min) => min + 1);
-      setSeconds(0);
-    }
-    if (minutes === 60) {
-      setHours((hour) => hour + 1);
-      setMinutes(0);
-    }
-
     return () => clearInterval(interval);
-  }, [seconds, isPaused, hours, minutes, gameOver]);
+  }, [dispatch, isPaused, isGameOver]);
 
   useEffect(() => {
     // Reset the timer when the difficulty changes
-    setHours(0);
-    setMinutes(0);
-    setSeconds(0);
-  }, [difficultyState]);
+    dispatch(resetTimer());
+  }, [difficultyState, dispatch]);
 
   const handleLevel = (e: React.MouseEvent<HTMLElement>) => {
-    // setClickable(String(e.currentTarget.id));
     dispatch(chooseDifficulty(e.currentTarget.id.toLowerCase() as Level));
   };
 
@@ -116,7 +94,7 @@ const GameNavbar: React.FC<gameNavState> = ({ gameOver }) => {
                   cursor: "pointer",
                   marginLeft: "-0.3rem",
                 }}
-                onClick={() => dispatch(setIsPause())}
+                onClick={() => dispatch(setPause())}
               />
             </span>
           </li>
