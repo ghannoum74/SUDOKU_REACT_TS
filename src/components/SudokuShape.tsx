@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../states/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
-import { setIsPause } from "../states/pauseGame";
 import {
   incrementMistakeNumber,
   resetMistakNumber,
 } from "../states/mistakesNumber";
-import { setScore } from "../states/score";
+import { resetScore, setScore } from "../states/score";
+import { setGameOver, setPause } from "../states/timer";
 // import { setNumber } from "../states/pickedNumber";
 
 interface Cell {
@@ -160,11 +160,7 @@ const generatePuzzle = (
   return { emptyBoard, board };
 };
 
-interface SudokuShapeProps {
-  setGameOver: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
+const SudokuShape = () => {
   const [board, setBoard] = useState<Cell[][]>([]);
   const [focused, setFocused] = useState<string>();
 
@@ -181,7 +177,7 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
     (state: RootState) => state.chosingDifficulty.difficulty
   );
 
-  const isPaused = useSelector((state: RootState) => state.isPaused.isPaused);
+  const isPaused = useSelector((state: RootState) => state.timer.isPaused);
 
   const mistakesNumber = useSelector(
     (state: RootState) => state.mistakesNumber.mistakesNb
@@ -250,11 +246,11 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
     const column: number = Number(e.currentTarget.dataset.column) - 1;
     const id: string = e.currentTarget.id;
 
+    setMistakeNumber(new Set());
     // when i clear the number reset the mistakNumbers
     if (e.target.value === "") {
       updatedBoard[row][column].value = null;
     } else {
-      setMistakeNumber(new Set());
       updatedBoard[row][column].value = Number(e.currentTarget.value);
 
       // case if number is true
@@ -285,7 +281,7 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
         // if the number is wrong increment the mistake number
         // but first check if this is the last chance for mistakes
         if (mistakesNumber === 2) {
-          setGameOver(true);
+          dispatch(setGameOver(true));
           // reset the mistale number class list
           setMistakeNumber(new Set());
           // to remove the focus on the last cell focused
@@ -306,17 +302,22 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
   };
 
   useEffect(() => {
-    const newBoard = generatePuzzle(difficulty);
-    setBoard(newBoard.emptyBoard);
-    setSolvedBoard(newBoard.board);
-    // reset the values to remove all the classes style
-    setWrongValue(new Set());
-    setCorrectValue(new Set());
-    dispatch(resetMistakNumber());
-    setMistakeNumber(new Set());
-    // dispatch(setScore(""));
-    // set the first cell focused by default
-    setFocused("111");
+    // so when the game over component appear and i click on new game the function in the game over which let the difficulty be "" fire
+    // so i can re select the easy mode and regenerate a new puzzle
+    if (difficulty !== "") {
+      const newBoard = generatePuzzle(difficulty);
+      setBoard(newBoard.emptyBoard);
+      setSolvedBoard(newBoard.board);
+      // reset the values to remove all the classes style
+      setWrongValue(new Set());
+      setCorrectValue(new Set());
+      dispatch(resetMistakNumber());
+      dispatch(resetScore());
+      setMistakeNumber(new Set());
+      // dispatch(setScore  (""));
+      // set the first cell focused by default
+      setFocused("111");
+    }
   }, [difficulty, dispatch]);
 
   return (
@@ -325,7 +326,7 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
         <>
           <div
             className="pause-icon-container"
-            onClick={() => dispatch(setIsPause())}
+            onClick={() => dispatch(setPause())}
           >
             <FontAwesomeIcon
               icon={faPlay}
