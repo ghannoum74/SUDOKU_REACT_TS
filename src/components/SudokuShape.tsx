@@ -4,7 +4,10 @@ import { RootState } from "../states/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { setIsPause } from "../states/pauseGame";
-import { incrementMistakeNumber } from "../states/mistakesNumber";
+import {
+  incrementMistakeNumber,
+  resetMistakNumber,
+} from "../states/mistakesNumber";
 import { setScore } from "../states/score";
 // import { setNumber } from "../states/pickedNumber";
 
@@ -106,7 +109,7 @@ const solveSudoku = (board: Cell[][]): boolean => {
 };
 
 const generatePuzzle = (
-  difficulty: "easy" | "medium" | "hard" | "expert"
+  difficulty: "easy" | "medium" | "hard" | "expert" | ""
 ): PuzzleResult => {
   // get the solved board
   const board = generateEmptyBoard();
@@ -198,10 +201,8 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
     value: number,
     board: Cell[][],
     row: number,
-    column: number,
-    block: number
+    column: number
   ) => {
-    console.log(row, column, block);
     // reset the mistake number
     setMistakeNumber(new Set());
 
@@ -209,7 +210,6 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
 
     for (let i = 0; i < 9; i++) {
       if (board[i][column].value === value) {
-        console.log(board[i][column].id);
         setMistakeNumber((prev) => new Set([...prev, board[i][column].id]));
       }
     }
@@ -217,7 +217,6 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
 
     for (let i = 0; i < 9; i++) {
       if (board[row][i].value === value) {
-        console.log(board[row][i].id);
         setMistakeNumber((prev) => new Set([...prev, board[row][i].id]));
       }
     }
@@ -249,13 +248,13 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
     const updatedBoard = [...board];
     const row: number = Number(e.currentTarget.dataset.row) - 1;
     const column: number = Number(e.currentTarget.dataset.column) - 1;
-    const block: number = Number(e.currentTarget.dataset.block) - 1;
     const id: string = e.currentTarget.id;
 
     // when i clear the number reset the mistakNumbers
     if (e.target.value === "") {
       updatedBoard[row][column].value = null;
     } else {
+      setMistakeNumber(new Set());
       updatedBoard[row][column].value = Number(e.currentTarget.value);
 
       // case if number is true
@@ -281,13 +280,13 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
           Number(e.currentTarget.value),
           updatedBoard,
           row,
-          column,
-          block
+          column
         );
         // if the number is wrong increment the mistake number
         // but first check if this is the last chance for mistakes
         if (mistakesNumber === 2) {
           setGameOver(true);
+          // reset the mistale number class list
           setMistakeNumber(new Set());
           // to remove the focus on the last cell focused
           e.currentTarget.blur();
@@ -313,10 +312,12 @@ const SudokuShape: React.FC<SudokuShapeProps> = ({ setGameOver }) => {
     // reset the values to remove all the classes style
     setWrongValue(new Set());
     setCorrectValue(new Set());
-
+    dispatch(resetMistakNumber());
+    setMistakeNumber(new Set());
+    // dispatch(setScore(""));
     // set the first cell focused by default
     setFocused("111");
-  }, [difficulty]);
+  }, [difficulty, dispatch]);
 
   return (
     <div className={`Sudoku-shape-container ${isPaused ? "paused" : ""}`}>
