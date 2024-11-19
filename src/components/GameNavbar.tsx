@@ -12,16 +12,20 @@ interface gameNavState {
 
 const GameNavbar: React.FC<gameNavState> = ({ gameOver }) => {
   type Level = "easy" | "medium" | "hard" | "expert";
-  const [clickable, setClickable] = useState<string>("Easy");
+
   const [seconds, setSeconds] = useState<number>(0);
   const [minutes, setMinutes] = useState<number>(0);
   const [hours, setHours] = useState<number>(0);
   // const [paused, setPaused] = useState<boolean>(false);
-  const difficulty: string[] = ["Easy", "Medium", "Hard", "Expert"];
+  // to avoid re create the same array for each time
+  const difficulty = ["Easy", "Medium", "Hard", "Expert"];
   const dispatch = useDispatch();
 
   const mistakesNb = useSelector(
     (state: RootState) => state.mistakesNumber.mistakesNb
+  );
+  const difficultyState = useSelector(
+    (state: RootState) => state.chosingDifficulty.difficulty
   );
 
   const score = useSelector((state: RootState) => state.score.score);
@@ -35,6 +39,7 @@ const GameNavbar: React.FC<gameNavState> = ({ gameOver }) => {
     const interval = setInterval(() => {
       setSeconds((prev) => prev + 1);
     }, 1000);
+
     if (hours === 24) {
       setHours(0);
       setMinutes(0);
@@ -53,8 +58,15 @@ const GameNavbar: React.FC<gameNavState> = ({ gameOver }) => {
     return () => clearInterval(interval);
   }, [seconds, isPaused, hours, minutes, gameOver]);
 
+  useEffect(() => {
+    // Reset the timer when the difficulty changes
+    setHours(0);
+    setMinutes(0);
+    setSeconds(0);
+  }, [difficultyState]);
+
   const handleLevel = (e: React.MouseEvent<HTMLElement>) => {
-    setClickable(String(e.currentTarget.id));
+    // setClickable(String(e.currentTarget.id));
     dispatch(chooseDifficulty(e.currentTarget.id.toLowerCase() as Level));
   };
 
@@ -66,7 +78,9 @@ const GameNavbar: React.FC<gameNavState> = ({ gameOver }) => {
           <li
             key={key}
             id={val}
-            className={`hovered-data ${val === clickable ? "clickable" : ""}`}
+            className={`hovered-data ${
+              val.toLowerCase() === difficultyState ? "clickable" : ""
+            }`}
             onClick={handleLevel}
             data-val={val}
           >
