@@ -7,7 +7,7 @@ type mistakenumber = {
 
 const initialState: mistakenumber = {
   score: 0,
-  level: "",
+  level: "easy",
 };
 
 export const sudokuScore = createSlice({
@@ -16,7 +16,7 @@ export const sudokuScore = createSlice({
   reducers: {
     setScore: (
       state,
-      action: PayloadAction<"easy" | "medium" | "hard" | "expert">
+      action: PayloadAction<"easy" | "medium" | "hard" | "expert" | "">
     ) => {
       switch (action.payload) {
         case "easy": {
@@ -36,13 +36,17 @@ export const sudokuScore = createSlice({
           break;
         }
         default: {
+          state.score = 0;
           break;
         }
       }
+    },
+    resetScore: (state) => {
+      state.score = 0;
     },
   },
 });
 
 // Correct the export here:
-export const { setScore } = sudokuScore.actions;
+export const { setScore, resetScore } = sudokuScore.actions;
 export default sudokuScore.reducer;
