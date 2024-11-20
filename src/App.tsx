@@ -11,22 +11,26 @@ import Congrats from "./components/Congrats";
 function App() {
   // const [gameOver, setGameOver] = useState<boolean>(false);
   const isGameOver = useSelector((state: RootState) => state.timer.isGameOver);
-  const isFinished = useSelector(
-    (state: RootState) => state.setSudokuFinished.isFinished
-  );
+  // const isFinished = useSelector(
+  //   (state: RootState) => state.setSudokuFinished.isFinished);
+  const isGameSolved = useSelector((state: RootState) => state.score.isSolved);
   return (
     <div className="main-container">
       {isGameOver && <GameOver />}
-      {isFinished && <Congrats />}
-      <GameNavbar />
-
-      <div className="game-container">
-        <SudokuShape />
-        <div className="setting-container">
-          <SudokuSetting />
-          <SudokuInputs />
-        </div>
-      </div>
+      {isGameSolved ? (
+        <Congrats />
+      ) : (
+        <>
+          <GameNavbar />
+          <div className="game-container">
+            <SudokuShape />
+            <div className="setting-container">
+              <SudokuSetting />
+              <SudokuInputs />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
