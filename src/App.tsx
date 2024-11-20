@@ -6,13 +6,18 @@ import "./css/App.css";
 import GameOver from "./components/GameOver";
 import { useSelector } from "react-redux";
 import { RootState } from "./states/store";
+import Congrats from "./components/Congrats";
 
 function App() {
   // const [gameOver, setGameOver] = useState<boolean>(false);
   const isGameOver = useSelector((state: RootState) => state.timer.isGameOver);
+  const isFinished = useSelector(
+    (state: RootState) => state.setSudokuFinished.isFinished
+  );
   return (
     <div className="main-container">
       {isGameOver && <GameOver />}
+      {isFinished && <Congrats />}
       <GameNavbar />
 
       <div className="game-container">
