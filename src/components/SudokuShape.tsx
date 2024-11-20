@@ -7,8 +7,9 @@ import {
   incrementMistakeNumber,
   resetMistakNumber,
 } from "../states/mistakesNumber";
-import { resetScore, setScore } from "../states/score";
+import { checkScore, resetScore, setScore } from "../states/score";
 import { setGameOver, setPause } from "../states/timer";
+import { setSolvedData } from "../states/SolvedBoardData";
 
 interface Cell {
   value: number | null;
@@ -163,7 +164,7 @@ const SudokuShape = () => {
   const [board, setBoard] = useState<Cell[][]>([]);
   const [focused, setFocused] = useState<string>();
 
-  const [solvedBoard, setSolvedBoard] = useState<Cell[][]>([]);
+  // const [solvedBoard, setSolvedBoard] = useState<Cell[][]>([]);
   const [correctValue, setCorrectValue] = useState<Set<string>>(new Set());
   const [wrongValue, setWrongValue] = useState<Set<string>>(new Set());
   const [mistakeNumber, setMistakeNumber] = useState<Set<string>>(new Set());
@@ -177,6 +178,9 @@ const SudokuShape = () => {
 
   const mistakesNumber = useSelector(
     (state: RootState) => state.mistakesNumber.mistakesNb
+  );
+  const solvedBoard = useSelector(
+    (state: RootState) => state.setSolvedData.solvedBoardData
   );
 
   const focusCells = (e: React.MouseEvent<HTMLElement>) => {
@@ -259,6 +263,9 @@ const SudokuShape = () => {
         // it check firstly if this cell is already calculated so to avoid when user enter true value many time for the same cell the increment for score
         if (e.currentTarget.dataset.calculate === "false") {
           dispatch(setScore(difficulty));
+
+          // only if i enter a true number
+          dispatch(checkScore(difficulty));
         }
         // if not calculated so i set calculate to true for this cell
         e.currentTarget.dataset.calculate = "true";
@@ -298,14 +305,14 @@ const SudokuShape = () => {
     if (difficulty !== "") {
       const newBoard = generatePuzzle(difficulty);
       setBoard(newBoard.emptyBoard);
-      setSolvedBoard(newBoard.board);
+      // setSolvedBoard(newBoard.board);
+      dispatch(setSolvedData(newBoard.board));
       // reset the values to remove all the classes style
       setWrongValue(new Set());
       setCorrectValue(new Set());
       dispatch(resetMistakNumber());
       dispatch(resetScore());
       setMistakeNumber(new Set());
-      // dispatch(setScore  (""));
       // set the first cell focused by default
       setFocused("111");
     }
