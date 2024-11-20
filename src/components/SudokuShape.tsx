@@ -9,7 +9,6 @@ import {
 } from "../states/mistakesNumber";
 import { resetScore, setScore } from "../states/score";
 import { setGameOver, setPause } from "../states/timer";
-// import { setNumber } from "../states/pickedNumber";
 
 interface Cell {
   value: number | null;
@@ -170,9 +169,6 @@ const SudokuShape = () => {
   const [mistakeNumber, setMistakeNumber] = useState<Set<string>>(new Set());
   const dispatch = useDispatch();
 
-  const selectedNumber = useSelector(
-    (state: RootState) => state.pickingNumber.numberSelected
-  );
   const difficulty = useSelector(
     (state: RootState) => state.chosingDifficulty.difficulty
   );
@@ -185,11 +181,6 @@ const SudokuShape = () => {
 
   const focusCells = (e: React.MouseEvent<HTMLElement>) => {
     setFocused(e.currentTarget.dataset.matrix);
-
-    if (selectedNumber) {
-      const target = e.currentTarget as HTMLInputElement;
-      target.value = selectedNumber.toString();
-    }
   };
 
   // return the number which caused the input number to be incorrect
