@@ -534,3 +534,160 @@ td.focused input {
 .pupop-new-game-menu .pupop-level .pupop-level-container li img {
   width: 100%;
 }
+
+/* styling congrats */
+.congrat-container {
+  background-image: linear-gradient(180deg, #325aaf 0, #6087d8 38%, #325aaf);
+
+  position: absolute;
+  z-index: 1000;
+  width: 51%;
+  height: 65%;
+  border-radius: 10px;
+  display: flex;
+  gap: 5%;
+  align-items: center;
+  justify-content: space-evenly;
+  transition: 0.3s;
+  overflow: hidden;
+}
+.congrat-container .left-side {
+  /* height: 80%; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 45%;
+
+  /* margin-left: 3rem; */
+  /* margin-top: 5rem; */
+  color: #fff;
+}
+
+.congrat-container .left-side img {
+  width: 100%;
+  display: block;
+  left: 25%;
+  pointer-events: none;
+  position: absolute;
+  top: -30%;
+  transform: translateX(-70%);
+  z-index: 0;
+  animation: spinner 200s linear infinite;
+}
+
+@keyframes spinner {
+  0% {
+    transform: translateX(-50%) rotate(0deg);
+  }
+  100% {
+    transform: translateX(-50%) rotate(360deg);
+  }
+}
+
+/* .congrat-container .solved-sudoku {
+  margin-top: 3rem;
+} */
+
+/* right side */
+.congrat-container .right-side {
+  /* height: 100%; */
+  display: flex;
+  flex: 45%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: 3rem;
+  /* margin-top: 10rem; */
+  color: #fff;
+}
+
+.congrat-container .right-side > div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* background-color: hsla(0, 0%, 100%, 0.2); */
+}
+
+.congrat-container .right-side .score,
+.name-id {
+  background-color: hsla(0, 0%, 100%, 0.2);
+  border-radius: 10px;
+}
+
+.congrat-container .right-side .name-id {
+  padding: 0.7rem;
+  margin: 0.7rem 0 1rem 0;
+}
+.congrat-container .right-side .score > div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #fff;
+}
+
+.congrat-container .right-side .score > div:last-of-type {
+  border-bottom: none;
+}
+
+.congrat-container .right-side .position button {
+  background-color: hsla(0, 0%, 100%, 0.2);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  transition: 0.3s;
+}
+
+.congrat-container .right-side .position button:hover {
+  background-color: hsla(0, 0%, 100%, 0.1);
+}
+
+.congrat-container .right-side .score {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+}
+
+.right-side .new-game {
+  border: none;
+  width: 100%;
+  margin-top: 3rem;
+  background-color: #fff !important;
+  color: var(--light-blue) !important;
+  padding: 1rem 0;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.right-side .new-game:hover {
+  color: #5772ad !important;
+}
+
+.left-side .table-shape {
+  width: 50%;
+  padding: 0.3rem;
+  background-color: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+}
+
+.left-side .table-shape tr td input {
+  font-size: 10px;
+}
+
+/* .congrat-container .left-side .solved-sudoku {
+  background-color: #fff;
+}
+
+.congrat-container .left-side .solved-sudoku td input {
+  width: 50%;
+} */
