@@ -1,17 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
-import pickingNumberReducer from "./pickedNumber";
 import chooseDificulty from "./difficultyGame";
 import mistakesNumbers from "./mistakesNumber";
 import sudokuScore from "./score";
 import setTimer from "./timer";
+import setSudokuFinished from "./congrats";
 
 const store = configureStore({
   reducer: {
-    pickingNumber: pickingNumberReducer,
     chosingDifficulty: chooseDificulty,
     mistakesNumber: mistakesNumbers,
     score: sudokuScore,
     timer: setTimer,
+    setSudokuFinished: setSudokuFinished,
   },
 });
 
