@@ -3,7 +3,7 @@ import chooseDificulty from "./difficultyGame";
 import mistakesNumbers from "./mistakesNumber";
 import sudokuScore from "./score";
 import setTimer from "./timer";
-import setSudokuFinished from "./congrats";
+import setSolvedData from "./SolvedBoardData";
 
 const store = configureStore({
   reducer: {
@@ -11,7 +11,7 @@ const store = configureStore({
     mistakesNumber: mistakesNumbers,
     score: sudokuScore,
     timer: setTimer,
-    setSudokuFinished: setSudokuFinished,
+    setSolvedData: setSolvedData,
   },
 });
 
