@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setNumber } from "../states/pickedNumber";
+
 import { chooseDifficulty } from "../states/difficultyGame";
 
 const SudokuInputs = () => {
@@ -8,10 +8,6 @@ const SudokuInputs = () => {
   const [newGame, setNewGame] = useState(false);
   const numbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const dispatch = useDispatch();
-
-  const pickedNumber = (e: React.MouseEvent<HTMLLIElement>) => {
-    dispatch(setNumber(Number(e.currentTarget.dataset.val)));
-  };
 
   const handleLevel = (e: React.MouseEvent<HTMLElement>) => {
     dispatch(chooseDifficulty(e.currentTarget.id as Level));
@@ -21,7 +17,7 @@ const SudokuInputs = () => {
     <div className="sudoku-inputs-container">
       <ul className="number-container">
         {numbers.map((val, key) => (
-          <li key={key} data-val={val} onClick={pickedNumber}>
+          <li key={key} data-val={val}>
             {val}
           </li>
         ))}
