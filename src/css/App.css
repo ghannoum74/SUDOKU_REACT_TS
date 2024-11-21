@@ -348,7 +348,7 @@ td.focused input {
   padding: 0;
 }
 
-.number-container li {
+.number-container .new-game {
   font-size: 42px;
   color: var(--light-blue);
   display: flex;
@@ -359,7 +359,7 @@ td.focused input {
   border-radius: 5px;
 }
 
-.number-container li:hover {
+.number-container .new-game:hover {
   background-color: #dce3ed;
 }
 
@@ -594,18 +594,18 @@ td.focused input {
 
 /* right side */
 .congrat-container .right-side {
-  /* height: 100%; */
   display: flex;
   flex: 45%;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
   margin-right: 3rem;
-  /* margin-top: 10rem; */
+
   color: #fff;
+  position: relative;
 }
 
-.congrat-container .right-side > div {
+.congrat-container .right-side > div:not(.new-game-menu, .profile-picture) {
   width: 100%;
   display: flex;
   align-items: center;
@@ -616,11 +616,11 @@ td.focused input {
 .congrat-container .right-side .score,
 .name-id {
   background-color: hsla(0, 0%, 100%, 0.2);
+  padding: 0 0.7rem;
   border-radius: 10px;
 }
 
 .congrat-container .right-side .name-id {
-  padding: 0.7rem;
   margin: 0.7rem 0 1rem 0;
 }
 .congrat-container .right-side .score > div {
@@ -642,10 +642,20 @@ td.focused input {
   margin-top: 1rem;
 }
 
+.btns {
+  flex-direction: column;
+  margin-top: 1rem;
+  gap: 0.7rem;
+}
+
+.btns .new-game.save {
+  color: #fff !important;
+  background-color: var(--correct-value) !important;
+}
+
 .right-side .new-game {
   border: none;
   width: 100%;
-  margin-top: 3rem;
   background-color: #fff !important;
   color: var(--light-blue) !important;
   padding: 1rem 0;
@@ -655,6 +665,18 @@ td.focused input {
 
 .right-side .new-game:hover {
   color: #5772ad !important;
+}
+
+.right-side .name-place input {
+  background-color: transparent;
+  caret-color: #fff;
+  color: var(--hover-effect);
+  padding: 0.7rem 0;
+}
+
+.right-side .name-place input:focus {
+  outline: none;
+  background-color: transparent;
 }
 
 .left-side .outline-table {
@@ -706,4 +728,38 @@ td.focused input {
 .table-shape .tr:nth-child(3) .td,
 .table-shape .tr:nth-child(6) .td {
   border-bottom: 1px solid var(--dark-blue);
+}
+
+/* style menu in the right side */
+/* style input file profile walpaper */
+.profile-picture {
+  height: 4rem;
+  width: 4rem;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 1.3px #ddd;
+  cursor: pointer;
+}
+
+.profile-picture img {
+  width: 100%;
+  cursor: pointer;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-picture input[type="file"] {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  cursor: pointer;
 }
