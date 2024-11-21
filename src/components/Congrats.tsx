@@ -24,7 +24,6 @@ const Congrats = () => {
   };
 
   const handlePostData = async () => {
-    console.log(level, getTime);
     try {
       const result = await axios.post("http://localhost:3000/addScore", {
         username: name,
@@ -38,9 +37,9 @@ const Congrats = () => {
         toast.success("Welcome the the leader board :)", {
           hideProgressBar: true,
         });
-        // setTimeout(() => {
-        //   location.reload();
-        // }, 1000);
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
 
         return;
       }
