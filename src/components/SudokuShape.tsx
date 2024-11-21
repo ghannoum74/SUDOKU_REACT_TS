@@ -124,7 +124,7 @@ const generatePuzzle = (
   // et the difficulties
   switch (difficulty) {
     case "easy":
-      cellsToRemove = 30;
+      cellsToRemove = 1;
 
       break;
     case "medium":
@@ -365,6 +365,7 @@ const SudokuShape = () => {
                     onChange={handleInputType}
                     readOnly={cell.unchangebale ? true : false}
                     data-calculate={cell.calculate}
+                    autoComplete="off"
                   />
                 </td>
               ))}
