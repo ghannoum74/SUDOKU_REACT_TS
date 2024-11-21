@@ -17,17 +17,19 @@ function App() {
   return (
     <div className="main-container">
       {isGameOver && <GameOver />}
-      <GameNavbar />
       {isGameSolved ? (
         <Congrats />
       ) : (
-        <div className="game-container">
-          <SudokuShape />
-          <div className="setting-container">
-            <SudokuSetting />
-            <SudokuInputs />
+        <>
+          <GameNavbar />
+          <div className="game-container">
+            <SudokuShape />
+            <div className="setting-container">
+              <SudokuSetting />
+              <SudokuInputs />
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
