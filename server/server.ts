@@ -14,34 +14,34 @@ app.use(cors());
 const defaultImagePath =
   "https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg";
 
-app.post(
-  "/addScore",
-  multer().single("image"),
-  async (req: Request, res: Response) => {
-    const { username, score, level, time } = req.body;
+const upload = multer({
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+}).single("image");
 
-    try {
-      const imageUrl = req.file?.path || defaultImagePath;
-      const existingName = await User.findOne({ username });
-      if (existingName) {
-        res.status(400).json({ message: "username already taken" });
-      } else {
-        const user = await User.create({
-          username,
-          score,
-          profileImg: imageUrl,
-          level: level,
-          time: time,
-        });
-        console.log(user);
+app.post("/addScore", upload, async (req: Request, res: Response) => {
+  const { username, score, level, time } = req.body;
 
-        res.status(200).json({ user });
-      }
-    } catch (error) {
-      res.status(400).json(error);
+  try {
+    const imageUrl = req.file?.path || defaultImagePath;
+    const existingName = await User.findOne({ username });
+    if (existingName) {
+      res.status(400).json({ message: "username already taken" });
+    } else {
+      const user = await User.create({
+        username,
+        score,
+        profileImg: imageUrl,
+        level: level,
+        time: time,
+      });
+      console.log(user);
+
+      res.status(200).json({ user });
     }
+  } catch (error) {
+    res.status(400).json(error);
   }
-);
+});
 
 app.get("/getUsers", async (req: Request, res: Response) => {
   try {
