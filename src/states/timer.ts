@@ -41,6 +41,10 @@ export const setTimer = createSlice({
     setPause: (state) => {
       state.isPaused = !state.isPaused;
     },
+
+    pause: (state) => {
+      state.isPaused = true;
+    },
     setGameOver: (state, action) => {
       state.isGameOver = action.payload;
     },
@@ -53,6 +57,6 @@ export const setTimer = createSlice({
 });
 
 // Correct the export here:
-export const { startTimer, setPause, setGameOver, resetTimer } =
+export const { startTimer, setPause, setGameOver, resetTimer, pause } =
   setTimer.actions;
 export default setTimer.reducer;
