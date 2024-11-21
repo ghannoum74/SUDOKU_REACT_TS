@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import DifficultuMenu from "./DifficultuMenu";
+import LeaderBoard from "./LeaderBoard";
 
 const SudokuInputs = () => {
   const [newGame, setNewGame] = useState(false);
-  useEffect(() => {}, []);
   return (
     <div className="sudoku-inputs-container">
       <div className="number-container">
-        <div className="leader-board">{localStorage.getItem("username")}</div>
+        <LeaderBoard />
         <div
           className="new-game"
           style={{ userSelect: "none" }}
