@@ -34,7 +34,7 @@ input[type="text"]:focus {
 }
 
 .main-container {
-  width: 50%;
+  width: 55%;
   padding-top: 1rem;
   margin: auto;
 
@@ -269,13 +269,13 @@ td.focused input {
 }
 
 /* styling sudoku setting container */
-.sudoku-setting-container {
+.setting-container {
   flex: 50%;
 }
 .sudoku-setting-container .sudoku-setting-icons {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  justify-content: space-evenly;
+  /* gap: 10px; */
 }
 
 .sudoku-setting-container .sudoku-setting-icons .icon-container {
@@ -341,10 +341,10 @@ td.focused input {
   user-select: none;
 }
 .number-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Create a 3-column grid */
+  display: flex;
+  flex-direction: column;
   gap: 10px; /* Space between grid items */
-  list-style-type: none; /* Remove list bullets */
+  list-style-type: none;
   padding: 0;
 }
 
@@ -762,4 +762,108 @@ td.focused input {
   top: 0;
   left: 0;
   cursor: pointer;
+}
+
+/* style the leader board */
+.users-container {
+  display: flex;
+  max-height: 15rem;
+  flex-direction: column;
+  gap: 1rem;
+  /* margin-top: 2rem; */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem;
+  flex: 1;
+}
+
+.users-container .each-user {
+  border: 1px solid #cbcdd4;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  background-color: #fff;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: 0.3s;
+  position: relative;
+}
+
+.users-container .each-user .user-name {
+  flex: 0.95;
+}
+
+.users-container .each-user:hover {
+  transform: scale(1.03) !important;
+  background-color: rgba(0, 0, 0, 0.005);
+  z-index: 1;
+}
+
+.users-container .each-user:hover .icons-holder {
+  opacity: 1;
+}
+
+.users-container .each-user .icons-holder {
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  z-index: 100;
+  opacity: 0;
+}
+
+/* scrollbar */
+.users-container::-webkit-scrollbar {
+  width: 4px;
+  visibility: hidden;
+}
+
+.users-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+  visibility: hidden;
+}
+
+.users-container::-webkit-scrollbar-thumb {
+  background: #c6c6c6;
+  border-radius: 10px;
+  visibility: hidden;
+}
+
+.users-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  cursor: pointer;
+}
+
+.users-container .each-user .description {
+  line-height: 1.2;
+  flex: 0.9;
+}
+
+.users-container .each-user .description .user-title {
+  font-weight: 700;
+}
+
+.users-container .each-user .description .user-description {
+  color: var(--grey);
+  font-size: 0.7rem;
+  margin-left: 0.3rem;
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+  overflow: hidden;
+  display: block;
+}
+
+.users-container .each-user .walpaper {
+  width: 3rem;
+  border-radius: 50%;
+  /* position: absolute; */
+}
+
+.users-container .each-user .walpaper img {
+  width: 100%;
+  border-radius: 50%;
 }
