@@ -56,6 +56,15 @@ export const setTimer = createSlice({
   },
 });
 
+export const getTimer = (state: { timer: timerState }) => {
+  const { hours, minutes, seconds } = state.timer;
+  return (
+    `${hours <= 9 ? `0${hours}` : hours}:` +
+    `${minutes <= 9 ? `0${minutes}` : minutes}:` +
+    `${seconds <= 9 ? `0${seconds}` : seconds}`
+  );
+};
+
 // Correct the export here:
 export const { startTimer, setPause, setGameOver, resetTimer, pause } =
   setTimer.actions;
