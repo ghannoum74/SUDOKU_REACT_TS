@@ -1,10 +1,12 @@
 import mongoose, { Document, Schema } from "mongoose";
-import Joi from "joi";
+import * as Joi from "joi";
 
 interface User extends Document {
   username: string;
   score?: number;
   profileImg?: string;
+  level: string;
+  time: string;
 }
 
 const UserSchema = new Schema<User>(
@@ -21,6 +23,14 @@ const UserSchema = new Schema<User>(
     profileImg: {
       type: String,
     },
+    level: {
+      type: String,
+      required: true,
+    },
+    time: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -30,8 +40,11 @@ const UserSchema = new Schema<User>(
 const User = mongoose.model<User>("User", UserSchema);
 
 const validationNewUser = Joi.object({
-  username: Joi.string().trim(),
-  number: Joi.number(),
+  username: Joi.string().trim().required(),
+  score: Joi.number(),
+  profileImg: Joi.string(),
+  level: Joi.string().required(),
+  time: Joi.string().required(),
 });
 
 export { User, validationNewUser };
