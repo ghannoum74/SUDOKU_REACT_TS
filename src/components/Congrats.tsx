@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../states/store";
 import React, { useEffect, useState } from "react";
-import { pause } from "../states/timer";
+import { getTimer, pause } from "../states/timer";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,9 +11,7 @@ const Congrats = () => {
     "https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg";
   const score = useSelector((state: RootState) => state.score.score);
   const level = useSelector((state: RootState) => state.score.level);
-  const seconds = useSelector((state: RootState) => state.timer.seconds);
-  const minutes = useSelector((state: RootState) => state.timer.minutes);
-  const hours = useSelector((state: RootState) => state.timer.hours);
+  const getTime = useSelector(getTimer);
   const fullSudokuShape = useSelector(
     (state: RootState) => state.setSolvedData.solvedBoardData
   );
@@ -26,10 +24,13 @@ const Congrats = () => {
   };
 
   const handlePostData = async () => {
+    console.log(level, getTime);
     try {
       const result = await axios.post("http://localhost:3000/addScore", {
         username: name,
         score: score,
+        level: level,
+        time: getTime,
         profileImage: imageSrc,
       });
       if (result.status === 200) {
@@ -37,9 +38,9 @@ const Congrats = () => {
         toast.success("Welcome the the leader board :)", {
           hideProgressBar: true,
         });
-        setTimeout(() => {
-          location.reload();
-        }, 1000);
+        // setTimeout(() => {
+        //   location.reload();
+        // }, 1000);
 
         return;
       }
@@ -118,11 +119,7 @@ const Congrats = () => {
             </div>
             <div className="time">
               <div className="">Time</div>
-              <div>
-                {hours <= 9 ? `0${hours}` : hours}:
-                {minutes <= 9 ? `0${minutes}` : minutes}:
-                {seconds <= 9 ? `0${seconds}` : seconds}
-              </div>
+              <div>{getTime}</div>
             </div>
           </div>
           <div className="btns">
