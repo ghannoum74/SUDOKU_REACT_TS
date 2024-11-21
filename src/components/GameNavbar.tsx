@@ -26,6 +26,7 @@ const GameNavbar = () => {
 
   const score = useSelector((state: RootState) => state.score.score);
   const isPaused = useSelector((state: RootState) => state.timer.isPaused);
+  const isSolved = useSelector((state: RootState) => state.score.isSolved);
 
   useEffect(() => {
     // to stop the timer
@@ -66,7 +67,10 @@ const GameNavbar = () => {
           </li>
         ))}
       </ul>
-      <ul className="game-data-wrapper">
+      <ul
+        className="game-data-wrapper"
+        style={{ display: `${isSolved ? "none" : "block"}` }}
+      >
         <ul className="data-game-container">
           <li>
             <span className="title">Mistakes:</span>
