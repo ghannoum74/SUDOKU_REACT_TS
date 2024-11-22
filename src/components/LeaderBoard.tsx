@@ -13,7 +13,7 @@ const LeaderBoard = () => {
   const [users, setUsers] = useState<usersType[]>([]);
   const getUsers = async () => {
     const result = await axios.get("http://localhost:3000/getUsers");
-    console.log(result);
+
     if (result) {
       setUsers(result.data);
     }
