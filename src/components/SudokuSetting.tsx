@@ -5,8 +5,13 @@ import {
   faPencil,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useDispatch, useSelector } from "react-redux";
+import { setHint } from "../states/hint";
+import { RootState } from "../states/store";
 
 const SudokuSetting = () => {
+  const hint = useSelector((state: RootState) => state.hint.hint);
+  const dispatch = useDispatch();
   return (
     <div className="sudoku-setting-container">
       <ul className="sudoku-setting-icons">
@@ -41,13 +46,13 @@ const SudokuSetting = () => {
           <div className="caption">Notes</div>
         </div>
         <div className="icon-container">
-          <li className="hint">
+          <li className="hint" onClick={() => dispatch(setHint())}>
             <FontAwesomeIcon
               icon={faLightbulb}
               size="2xl"
               style={{ color: "#325aaf" }}
             />
-            <div className="hint-number">3</div>
+            <div className="hint-number">{hint}</div>
           </li>
           <div className="caption">Hint</div>
         </div>
