@@ -5,6 +5,8 @@ import sudokuScore from "./score";
 import setTimer from "./timer";
 import setSolvedData from "./SolvedBoardData";
 
+import setHint from "./hint";
+
 const store = configureStore({
   reducer: {
     chosingDifficulty: chooseDificulty,
@@ -12,6 +14,8 @@ const store = configureStore({
     score: sudokuScore,
     timer: setTimer,
     setSolvedData: setSolvedData,
+
+    hint: setHint,
   },
 });
 
