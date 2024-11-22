@@ -13,6 +13,7 @@
   --correct-value: #09dd09;
   --wrong-cell: #f7cfd6;
   --wrong-value: #e55c6c;
+  --hinted-value: #f08c00;
 }
 
 html,
@@ -778,7 +779,7 @@ td.focused input {
 }
 
 .users-container .each-user {
-  border: 1px solid #cbcdd4;
+  border: 1px solid var(--blur-blue);
   border-radius: 1rem;
   padding: 0.5rem 1rem;
   cursor: pointer;
@@ -841,6 +842,7 @@ td.focused input {
 .users-container .each-user .description {
   line-height: 1.2;
   flex: 0.9;
+  color: var(--dark-blue);
 }
 
 .users-container .each-user .description .user-title {
@@ -866,4 +868,8 @@ td.focused input {
 .users-container .each-user .walpaper img {
   width: 100%;
   border-radius: 50%;
+}
+
+.users-container .each-user .container-time {
+  color: var(--light-blue);
 }
