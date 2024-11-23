@@ -386,18 +386,20 @@ td.focused input {
 .new-game-menu {
   width: 100%;
   position: absolute;
-  top: -35%;
+  top: -32%;
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.2);
   padding: 1rem;
   border-radius: 5px;
-  transition: opacity 0.3s ease-in-out;
   background-color: #fff;
   line-height: 1.5;
-  display: none;
+  opacity: 0;
+  z-index: -1;
+  transition: 0.5s;
 }
 
 .new-game-menu.appear {
-  display: block;
+  opacity: 1;
+  z-index: 1;
 }
 
 .new-game-menu .head {
@@ -438,12 +440,11 @@ td.focused input {
   border-color: #ffffff transparent transparent transparent;
   position: absolute;
   top: 109%;
-  left: 50%;
+  left: 45%;
 }
 
 .new-game-menu .level .level-container {
   padding: 0.7rem 1rem;
-
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -474,7 +475,6 @@ td.focused input {
 /* styling the new game menu spetial in the game over component */
 .pupop-new-game-menu {
   width: 100%;
-
   padding: 1rem;
   border-radius: 5px;
   transition: opacity 0.3s ease-in-out;
@@ -772,8 +772,8 @@ td.focused input {
 /* style the leader board */
 .users-container {
   display: flex;
-  height: 15rem;
-  max-height: 15rem;
+  height: 18rem;
+  max-height: 18rem;
   flex-direction: column;
   gap: 1rem;
   /* margin-top: 2rem; */
