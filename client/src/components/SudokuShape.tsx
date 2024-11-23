@@ -22,6 +22,7 @@ interface Cell {
   block: number;
   matrix: string;
   unchangebale: boolean;
+  hinted: boolean;
 }
 
 const SudokuShape = () => {
@@ -185,9 +186,12 @@ const SudokuShape = () => {
     }
   }, [difficulty, dispatch]);
 
+  // this is for the hint feature
   useEffect(() => {
     if (board.length > 0) {
       setBoard(giveHint(board));
+      dispatch(setScore(difficulty));
+      dispatch(checkScore(difficulty));
     }
   }, [hint]);
 
@@ -226,7 +230,8 @@ const SudokuShape = () => {
                       correctValue.has(cell.id) ? "correctValue" : ""
                     }${wrongValue.has(cell.id) ? "wrongValue" : ""} ${
                       isPaused ? "paused" : ""
-                    }${mistakeNumber.has(cell.id) ? "mistakNumber" : ""}`}
+                    }${mistakeNumber.has(cell.id) ? "mistakNumber" : ""}
+                    ${cell.hinted ? "hinted" : ""}`}
                     id={cell.id}
                     value={cell.value ?? ""}
                     data-matrix={`${cell.row}${cell.column}${cell.block}`}
