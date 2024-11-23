@@ -7,6 +7,7 @@ interface Cell {
   block: number;
   matrix: string;
   unchangebale: boolean;
+  hinted: boolean;
 }
 
 type PuzzleResult = {
@@ -30,6 +31,7 @@ export const generateEmptyBoard = (): Cell[][] => {
           Math.floor(r / 3) * 3 + Math.floor(cell / 3) + 1
         }`,
         unchangebale: true,
+        hinted: false,
       });
     }
     board.push(row);
