@@ -7,12 +7,13 @@ interface diffState {
 }
 
 const DifficultuMenu: React.FC<diffState> = ({ newGame }) => {
-  type Level = "easy" | "medium" | "hard" | "expert";
+  type Level = "easy" | "medium" | "hard" | "expert" | "custom";
   const dispatch = useDispatch();
 
   const handleLevel = (e: React.MouseEvent<HTMLElement>) => {
     dispatch(chooseDifficulty(e.currentTarget.id as Level));
   };
+
   return (
     <div className={`new-game-menu ${newGame ? "appear" : ""}`}>
       <div className="head">Select Game Mode</div>
@@ -42,6 +43,12 @@ const DifficultuMenu: React.FC<diffState> = ({ newGame }) => {
             <img src="https://cdn-icons-png.flaticon.com/512/4295/4295600.png" />
           </li>
           <li>Expert</li>
+        </div>
+        <div className="level-container" id="custom" onClick={handleLevel}>
+          <li>
+            <img src="https://cdn-icons-png.flaticon.com/512/4295/4295600.png" />
+          </li>
+          <li style={{ width: "100%" }}>Create Your Own Board</li>
         </div>
       </ul>
     </div>
