@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type mistakenumber = {
   score: number;
-  level: "easy" | "medium" | "hard" | "expert" | "";
+  level: "easy" | "medium" | "hard" | "expert" | "custom" | "";
   isSolved: boolean;
 };
 
@@ -18,7 +18,9 @@ export const sudokuScore = createSlice({
   reducers: {
     setScore: (
       state,
-      action: PayloadAction<"easy" | "medium" | "hard" | "expert" | "">
+      action: PayloadAction<
+        "easy" | "medium" | "hard" | "expert" | "custom" | ""
+      >
     ) => {
       switch (action.payload) {
         case "easy": {
@@ -49,7 +51,9 @@ export const sudokuScore = createSlice({
     },
     checkScore: (
       state,
-      action: PayloadAction<"easy" | "medium" | "hard" | "expert" | "">
+      action: PayloadAction<
+        "easy" | "medium" | "hard" | "expert" | "custom" | ""
+      >
     ) => {
       state.isSolved = false;
       switch (action.payload) {
@@ -59,15 +63,15 @@ export const sudokuScore = createSlice({
           break;
         }
         case "medium": {
-          state.isSolved = state.score === 5000;
+          state.isSolved = state.score === 4000;
           break;
         }
         case "hard": {
-          state.isSolved = state.score === 9000;
+          state.isSolved = state.score === 7500;
           break;
         }
         case "expert": {
-          state.isSolved = state.score === 18750;
+          state.isSolved = state.score === 15000;
           break;
         }
         default: {
