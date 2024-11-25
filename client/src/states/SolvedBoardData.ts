@@ -9,6 +9,7 @@ type Cell = {
   block: number;
   matrix: string;
   unchangebale: boolean;
+  hinted: boolean;
 };
 
 type SolvedState = {
