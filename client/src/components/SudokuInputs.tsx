@@ -9,6 +9,7 @@ const SudokuInputs = () => {
     <div className="sudoku-inputs-container">
       <div className="number-container">
         <LeaderBoard />
+        <DifficultuMenu newGame={newGame} />
         <div
           className="new-game"
           style={{ userSelect: "none" }}
@@ -17,7 +18,6 @@ const SudokuInputs = () => {
           New Game
         </div>
       </div>
-      {newGame && <DifficultuMenu newGame={newGame} />}
     </div>
   );
 };
