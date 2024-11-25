@@ -67,43 +67,45 @@ const GameNavbar = () => {
           </li>
         ))}
       </ul>
-      <ul
-        className="game-data-wrapper"
-        style={{ display: `${isSolved ? "none" : "block"}` }}
-      >
-        <ul className="data-game-container">
-          <li>
-            <span className="title">Mistakes:</span>
-            <span className="value">{mistakesNb}/3</span>
-          </li>
-          <li>
-            <span className="title">Score:</span>
-            <span className="value">{score}</span>
-          </li>
-          <li className="timer">
-            <span>
-              {hours <= 9 ? `0${hours}` : hours}:
-              {minutes <= 9 ? `0${minutes}` : minutes}:
-              {seconds <= 9 ? `0${seconds}` : seconds}
-            </span>
-          </li>
-          <li>
-            <span>
-              <FontAwesomeIcon
-                className="pause-icon"
-                icon={isPaused ? faCirclePlay : faCirclePause}
-                size="xl"
-                style={{
-                  color: "rgb(203 212 225)",
-                  cursor: "pointer",
-                  marginLeft: "-0.3rem",
-                }}
-                onClick={() => dispatch(setPause())}
-              />
-            </span>
-          </li>
+      {difficultyState !== "custom" ? (
+        <ul
+          className="game-data-wrapper"
+          style={{ display: `${isSolved ? "none" : "block"}` }}
+        >
+          <ul className="data-game-container">
+            <li>
+              <span className="title">Mistakes:</span>
+              <span className="value">{mistakesNb}/3</span>
+            </li>
+            <li>
+              <span className="title">Score:</span>
+              <span className="value">{score}</span>
+            </li>
+            <li className="timer">
+              <span>
+                {hours <= 9 ? `0${hours}` : hours}:
+                {minutes <= 9 ? `0${minutes}` : minutes}:
+                {seconds <= 9 ? `0${seconds}` : seconds}
+              </span>
+            </li>
+            <li>
+              <span>
+                <FontAwesomeIcon
+                  className="pause-icon"
+                  icon={isPaused ? faCirclePlay : faCirclePause}
+                  size="xl"
+                  style={{
+                    color: "rgb(203 212 225)",
+                    cursor: "pointer",
+                    marginLeft: "-0.3rem",
+                  }}
+                  onClick={() => dispatch(setPause())}
+                />
+              </span>
+            </li>
+          </ul>
         </ul>
-      </ul>
+      ) : null}
     </div>
   );
 };
