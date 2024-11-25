@@ -5,7 +5,7 @@ import { chooseDifficulty } from "../states/difficultyGame";
 import { setGameOver } from "../states/timer";
 
 const GameOver = () => {
-  type Level = "easy" | "medium" | "hard" | "expert";
+  type Level = "easy" | "medium" | "hard" | "expert" | "custom";
   const [togglePupop, setTogglePupop] = useState<boolean>(false);
   const dispatch = useDispatch();
   const handleSecondChancge = () => {
@@ -73,6 +73,18 @@ const GameOver = () => {
                     <img src="https://cdn-icons-png.flaticon.com/512/4295/4295600.png" />
                   </li>
                   <li>Expert</li>
+                </div>
+                <div
+                  className="pupop-level-container"
+                  id="custom"
+                  onClick={handleLevel}
+                >
+                  <li>
+                    <img src="https://cdn-icons-png.flaticon.com/512/4295/4295600.png" />
+                  </li>
+                  <li style={{ width: "100%", textAlign: "start" }}>
+                    Create Your Own
+                  </li>
                 </div>
               </ul>
             </div>
