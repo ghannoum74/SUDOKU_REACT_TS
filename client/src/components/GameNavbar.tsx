@@ -7,10 +7,10 @@ import { RootState } from "../states/store";
 import { resetTimer, setPause, startTimer } from "../states/timer";
 
 const GameNavbar = () => {
-  type Level = "easy" | "medium" | "hard" | "expert";
+  type Level = "easy" | "medium" | "hard" | "expert" | "custom";
 
   // to avoid re create the same array for each time
-  const difficulty = ["Easy", "Medium", "Hard", "Expert"];
+  const difficulty = ["Easy", "Medium", "Hard", "Expert", "custom"];
   const dispatch = useDispatch();
   const seconds = useSelector((state: RootState) => state.timer.seconds);
   const minutes = useSelector((state: RootState) => state.timer.minutes);
