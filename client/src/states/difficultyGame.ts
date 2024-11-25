@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type chooseDifficulty = {
-  difficulty: "easy" | "medium" | "hard" | "expert" | "";
+  difficulty: "easy" | "medium" | "hard" | "expert" | "custom" | "";
 };
 
 const initialState: chooseDifficulty = {
@@ -14,7 +14,9 @@ export const difficultyChoosing = createSlice({
   reducers: {
     chooseDifficulty: (
       state,
-      action: PayloadAction<"easy" | "medium" | "hard" | "expert" | "">
+      action: PayloadAction<
+        "easy" | "medium" | "hard" | "expert" | "custom" | ""
+      >
     ) => {
       state.difficulty = action.payload;
     },
