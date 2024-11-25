@@ -15,7 +15,7 @@ type PuzzleResult = {
   board: Cell[][];
 };
 
-export const generateEmptyBoard = (): Cell[][] => {
+export const generateEmptyBoard = (mode: string): Cell[][] => {
   const board: Cell[][] = [];
   for (let r = 0; r < 9; r++) {
     const row: Cell[] = [];
@@ -30,7 +30,7 @@ export const generateEmptyBoard = (): Cell[][] => {
         matrix: `${r + 1}${cell + 1}${
           Math.floor(r / 3) * 3 + Math.floor(cell / 3) + 1
         }`,
-        unchangebale: true,
+        unchangebale: mode === "default" ? true : false,
         hinted: false,
       });
     }
@@ -45,22 +45,31 @@ export const isValidPlacement = (
   col: number,
   num: number
 ): boolean => {
-  // searching through the row or column
   for (let i = 0; i < 9; i++) {
-    if (board[row][i].value === num || board[i][col].value === num)
+    if (
+      // i add first condition to avoid checking the cell itself
+      (i !== col && board[row][i].value === num) ||
+      (i !== row && board[i][col].value === num)
+    ) {
       return false;
+    }
   }
 
   const startRow = Math.floor(row / 3) * 3;
   const startCol = Math.floor(col / 3) * 3;
-  // searching in the current block
 
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
-      // so here the startRow is rathe 0, 3, 6 so i add i which is 0 or 1 or 2 to seach through the block (0,1,2 --- 3, 4, 5 --- 6, 7, 8)
-      if (board[startRow + i][startCol + j].value === num) return false;
+      if (
+        // i add first condition to avoid checking the cell itself
+        (startRow + i !== row || startCol + j !== col) &&
+        board[startRow + i][startCol + j].value === num
+      ) {
+        return false;
+      }
     }
   }
+
   return true;
 };
 
@@ -98,13 +107,9 @@ export const solveSudoku = (board: Cell[][]): boolean => {
 };
 
 export const generatePuzzle = (
-  difficulty: "easy" | "medium" | "hard" | "expert" | ""
+  difficulty: "easy" | "medium" | "hard" | "expert" | "custom" | "",
+  board: Cell[][]
 ): PuzzleResult => {
-  // get the solved board
-  const board = generateEmptyBoard();
-
-  solveSudoku(board);
-
   // working on clone for the actuall board
   // in this case i used the deep copy to avoid the actuall variable effect by changing for the variable copy
   const emptyBoard = JSON.parse(JSON.stringify(board));
@@ -117,14 +122,17 @@ export const generatePuzzle = (
 
       break;
     case "medium":
-      cellsToRemove = 50;
+      cellsToRemove = 40;
 
       break;
     case "hard":
-      cellsToRemove = 60;
+      cellsToRemove = 50;
       break;
     case "expert":
-      cellsToRemove = 75;
+      cellsToRemove = 60;
+      break;
+    case "custom":
+      cellsToRemove = 81;
       break;
     default: {
       cellsToRemove = 30;
