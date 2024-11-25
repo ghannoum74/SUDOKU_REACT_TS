@@ -1,6 +1,7 @@
 import React from "react";
 import { chooseDifficulty } from "../states/difficultyGame";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../states/store";
 
 interface diffState {
   newGame: boolean;
@@ -13,9 +14,16 @@ const DifficultuMenu: React.FC<diffState> = ({ newGame }) => {
   const handleLevel = (e: React.MouseEvent<HTMLElement>) => {
     dispatch(chooseDifficulty(e.currentTarget.id as Level));
   };
+  const difficultyState = useSelector(
+    (state: RootState) => state.chosingDifficulty.difficulty
+  );
 
   return (
-    <div className={`new-game-menu ${newGame ? "appear" : ""}`}>
+    <div
+      className={`new-game-menu ${newGame ? "appear" : ""} ${
+        difficultyState === "custom" ? "custom" : null
+      }`}
+    >
       <div className="head">Select Game Mode</div>
       <div className="small">Current game progress will be lost</div>
       <div className="mode-btn">Classic</div>
