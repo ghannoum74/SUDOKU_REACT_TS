@@ -6,6 +6,7 @@ import setTimer from "./timer";
 import setSolvedData from "./SolvedBoardData";
 
 import setHint from "./hint";
+import solveCustomBoard from "./solveCustomBoard";
 
 const store = configureStore({
   reducer: {
@@ -14,7 +15,7 @@ const store = configureStore({
     score: sudokuScore,
     timer: setTimer,
     setSolvedData: setSolvedData,
-
+    solveCustomBoard: solveCustomBoard,
     hint: setHint,
   },
 });
