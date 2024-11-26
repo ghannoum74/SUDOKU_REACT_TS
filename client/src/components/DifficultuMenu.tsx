@@ -21,7 +21,7 @@ const DifficultuMenu: React.FC<diffState> = ({ newGame }) => {
   return (
     <div
       className={`new-game-menu ${newGame ? "appear" : ""} ${
-        difficultyState === "custom" ? "custom" : null
+        difficultyState === "custom" ? "custom" : ""
       }`}
     >
       <div className="head">Select Game Mode</div>
