@@ -79,7 +79,7 @@ const SudokuShape = () => {
     );
   };
 
-  const reset = (type: string, id: string): void => {
+  const setState = (type: string, id: string): void => {
     const setToAdd = type === "correct" ? setCorrectValue : setWrongValue;
     setToAdd((prev) => new Set([...prev, id]));
   };
@@ -111,7 +111,7 @@ const SudokuShape = () => {
       if (difficulty !== "custom") {
         // case if number is true
         if (solvedBoard[row][column].value === Number(e.currentTarget.value)) {
-          reset("correct", id);
+          setState("correct", id);
 
           // this is to calculate the score
           // it check firstly if this cell is already calculated so to avoid when user enter true value many time for the same cell the increment for score
@@ -124,6 +124,7 @@ const SudokuShape = () => {
           // if not calculated so i set calculate to true for this cell
           e.currentTarget.dataset.calculate = "true";
         } else {
+          // case if number is false
           handleMistakeNumber(
             "add",
             mistakeNumber,
@@ -134,17 +135,18 @@ const SudokuShape = () => {
           );
           // if the number is wrong increment the mistake number
           // but first check if this is the last chance for mistakes
-          if (mistakesNumber === 2000) {
+          if (mistakesNumber === 2) {
             dispatch(setGameOver(true));
+
             // to remove the focus on the last cell focused
             e.currentTarget.blur();
-            // updatedBoard[row][column].value = solvedBoard[row][column].value;
           }
           dispatch(incrementMistakeNumber());
 
-          reset("wrong", id);
+          setState("wrong", id);
         }
       } else {
+        // if i'm in the custom level i should check each cell using backtracking algo because i don't have the solved board
         if (
           !isValidPlacement(
             updatedBoard,
@@ -170,7 +172,7 @@ const SudokuShape = () => {
     setBoard(updatedBoard);
   };
 
-  useEffect(() => {
+  const resetAll = () => {
     // reset the values to remove all the classes style
     setWrongValue(new Set());
     setCorrectValue(new Set());
@@ -179,13 +181,15 @@ const SudokuShape = () => {
     setMistakeNumber(new Set());
     // set the first cell focused by default
     setFocused("111");
+  };
+
+  useEffect(() => {
+    resetAll();
     // so when the game over component appear and i click on new game the function in the game over which let the difficulty be "" fire
     // so i can re select the easy mode and regenerate a new puzzle
     if (difficulty !== "" && difficulty !== "custom") {
       const defaultBoard = generateEmptyBoard("default");
-
       // get the solved board
-
       solveSudoku(defaultBoard);
       const newBoard = generatePuzzle(difficulty, defaultBoard);
       setBoard(newBoard.emptyBoard);
@@ -200,6 +204,7 @@ const SudokuShape = () => {
 
   // this is for the hint feature
   useEffect(() => {
+    console.log(hint);
     if (board.length > 0) {
       setBoard(giveHint(board));
       dispatch(setScore(difficulty));
@@ -210,6 +215,7 @@ const SudokuShape = () => {
   // this use effect is for the custom board solver
   useEffect(() => {
     if (solvedCustomBoard) {
+      console.log("hello");
       setBoard(solvedBoard);
       // dispatch(solveCustomBoard(false));
     }
