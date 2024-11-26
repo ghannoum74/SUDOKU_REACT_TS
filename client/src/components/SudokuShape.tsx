@@ -22,7 +22,7 @@ import {
   removeMistakeCells,
 } from "../utils/getAndRemoveMistakeNumber";
 import { Cell } from "../types/cell";
-import { validateInput } from "../utils/controleInput";
+import { validateInput } from "../utils/inputValidation";
 
 const SudokuShape = () => {
   const [board, setBoard] = useState<Cell[][]>([]);
@@ -80,20 +80,13 @@ const SudokuShape = () => {
   };
 
   const reset = (type: string, id: string): void => {
-    const value = type === "correct" ? wrongValue : correctValue;
-    const setToRemove = type === "correct" ? setWrongValue : setCorrectValue;
     const setToAdd = type === "correct" ? setCorrectValue : setWrongValue;
-
-    if (value.has(id)) {
-      setToRemove((prev) => new Set([...prev].filter((value) => value !== id)));
-    }
     setToAdd((prev) => new Set([...prev, id]));
   };
 
   const handleInputType = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateInput(e.target.value)) {
       e.target.value = "";
-      return;
     }
 
     const updatedBoard = JSON.parse(JSON.stringify(board));
