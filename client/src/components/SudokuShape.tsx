@@ -80,16 +80,16 @@ const SudokuShape = () => {
   };
 
   const reset = (type: string, id: string): void => {
-    if (type === "correct") {
-      if (wrongValue.has(id)) {
-        setWrongValue(
-          (prev) => new Set([...prev].filter((value) => value !== id))
-        );
-      }
-      // set the number to be correct
-      setCorrectValue((prev) => new Set([...prev, id]));
+    const value = type === "correct" ? wrongValue : correctValue;
+    const setToRemove = type === "correct" ? setWrongValue : setCorrectValue;
+    const setToAdd = type === "correct" ? setCorrectValue : setWrongValue;
+
+    if (value.has(id)) {
+      setToRemove((prev) => new Set([...prev].filter((value) => value !== id)));
     }
+    setToAdd((prev) => new Set([...prev, id]));
   };
+
   const handleInputType = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateInput(e.target.value)) {
       e.target.value = "";
@@ -149,12 +149,7 @@ const SudokuShape = () => {
           }
           dispatch(incrementMistakeNumber());
 
-          if (correctValue.has(id)) {
-            setCorrectValue(
-              (prev) => new Set([...prev].filter((value) => value !== id))
-            );
-          }
-          setWrongValue((prev) => new Set([...prev, id]));
+          reset("wrong", id);
         }
       } else {
         if (
