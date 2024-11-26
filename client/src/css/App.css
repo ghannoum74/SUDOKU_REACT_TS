@@ -954,6 +954,13 @@ td.focused input {
   font-weight: 600;
   flex: 50%;
 }
+.custom-setting .solve.not-active {
+  cursor: not-allowed;
+}
+
+.custom-setting .solve.not-active:hover {
+  background-color: var(--correct-value);
+}
 
 .custom-setting .img {
   flex: 50%;
