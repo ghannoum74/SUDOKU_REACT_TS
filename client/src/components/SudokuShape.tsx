@@ -10,26 +10,23 @@ import {
 import { checkScore, resetScore, setScore } from "../states/score";
 import { setGameOver, setPause } from "../states/timer";
 import { setSolvedData } from "../states/SolvedBoardData";
-import { generatePuzzle } from "../utils/backTrackingAlgo";
+import {
+  generateEmptyBoard,
+  generatePuzzle,
+  isValidPlacement,
+  solveSudoku,
+} from "../utils/backTrackingAlgo";
 import { giveHint } from "../utils/hint";
-
-interface Cell {
-  value: number | null;
-  calculate: boolean;
-  id: string;
-  row: number;
-  column: number;
-  block: number;
-  matrix: string;
-  unchangebale: boolean;
-  hinted: boolean;
-}
+import {
+  addMistakeCells,
+  removeMistakeCells,
+} from "../utils/getAndRemoveMistakeNumber";
+import { Cell } from "../types/cell";
 
 const SudokuShape = () => {
   const [board, setBoard] = useState<Cell[][]>([]);
   const [focused, setFocused] = useState<string>();
 
-  // const [solvedBoard, setSolvedBoard] = useState<Cell[][]>([]);
   const [correctValue, setCorrectValue] = useState<Set<string>>(new Set());
   const [wrongValue, setWrongValue] = useState<Set<string>>(new Set());
   const [mistakeNumber, setMistakeNumber] = useState<Set<string>>(new Set());
@@ -47,50 +44,30 @@ const SudokuShape = () => {
   const solvedBoard = useSelector(
     (state: RootState) => state.setSolvedData.solvedBoardData
   );
+
+  const solvedCustomBoard = useSelector(
+    (state: RootState) => state.solveCustomBoard.isSolved
+  );
   const hint = useSelector((state: RootState) => state.hint.hint);
 
   const focusCells = (e: React.MouseEvent<HTMLElement>) => {
     setFocused(e.currentTarget.dataset.matrix);
   };
 
-  // return the number which caused the input number to be incorrect
-  const getTheMistakeCells = (
-    value: number,
+  const handleMistakeNumber = (
+    type: string,
+    mistakeNumber: Set<string>,
     board: Cell[][],
+    value: number,
     row: number,
     column: number
   ) => {
-    // reset the mistake number
-    setMistakeNumber(new Set());
+    const mistakes =
+      type === "remove"
+        ? removeMistakeCells(mistakeNumber, value, board, row, column)
+        : addMistakeCells(mistakeNumber, value, board, row, column);
 
-    // check the row
-
-    for (let i = 0; i < 9; i++) {
-      if (board[i][column].value === value) {
-        setMistakeNumber((prev) => new Set([...prev, board[i][column].id]));
-      }
-    }
-    // check the column
-
-    for (let i = 0; i < 9; i++) {
-      if (board[row][i].value === value) {
-        setMistakeNumber((prev) => new Set([...prev, board[row][i].id]));
-      }
-    }
-
-    const startRow = Math.floor(row / 3) * 3;
-    const startCol = Math.floor(column / 3) * 3;
-    // searching in the current block
-
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        // so here the startRow is rathe 0, 3, 6 so i add i which is 0 or 1 or 2 to seach through the block (0,1,2 --- 3, 4, 5 --- 6, 7, 8)
-        if (board[startRow + i][startCol + j].value === value)
-          setMistakeNumber(
-            (prev) => new Set([...prev, board[startRow + i][startCol + j].id])
-          );
-      }
-    }
+    setMistakeNumber(mistakes);
   };
 
   const handleInputType = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,87 +79,131 @@ const SudokuShape = () => {
       e.target.value = "";
       return;
     }
-    const updatedBoard = [...board];
+    const updatedBoard = JSON.parse(JSON.stringify(board));
     const row: number = Number(e.currentTarget.dataset.row) - 1;
     const column: number = Number(e.currentTarget.dataset.column) - 1;
     const id: string = e.currentTarget.id;
 
-    setMistakeNumber(new Set());
     // when i clear the number reset the mistakNumbers
     if (e.target.value === "") {
+      handleMistakeNumber(
+        "remove",
+        mistakeNumber,
+        // i can't add the e.target.value because it's null
+        updatedBoard,
+        updatedBoard[row][column].value,
+        row,
+        column
+      );
+
       updatedBoard[row][column].value = null;
-      setWrongValue(new Set());
+      setWrongValue(
+        (prev) => new Set([...prev].filter((value) => value !== id))
+      );
+      setCorrectValue(
+        (prev) => new Set([...prev].filter((value) => value !== id))
+      );
     } else {
       updatedBoard[row][column].value = Number(e.currentTarget.value);
+      if (difficulty !== "custom") {
+        // case if number is true
+        if (solvedBoard[row][column].value === Number(e.currentTarget.value)) {
+          // remove the number from the wrong section
+          if (wrongValue.has(id)) {
+            setWrongValue(
+              (prev) => new Set([...prev].filter((value) => value !== id))
+            );
+          }
+          // set the number to be correct
+          setCorrectValue((prev) => new Set([...prev, id]));
 
-      // case if number is true
-      if (solvedBoard[row][column].value === Number(e.currentTarget.value)) {
-        // remove the number from the wrong section
-        if (wrongValue.has(id)) {
-          setWrongValue(
-            (prev) => new Set([...prev].filter((value) => value !== id))
+          // this is to calculate the score
+          // it check firstly if this cell is already calculated so to avoid when user enter true value many time for the same cell the increment for score
+          if (e.currentTarget.dataset.calculate === "false") {
+            dispatch(setScore(difficulty));
+
+            // only if i enter a true number
+            dispatch(checkScore(difficulty));
+          }
+          // if not calculated so i set calculate to true for this cell
+          e.currentTarget.dataset.calculate = "true";
+        } else {
+          handleMistakeNumber(
+            "add",
+            mistakeNumber,
+            updatedBoard,
+            Number(e.currentTarget.value),
+            row,
+            column
           );
-        }
-        // set the number to be correct
-        setCorrectValue((prev) => new Set([...prev, id]));
+          // if the number is wrong increment the mistake number
+          // but first check if this is the last chance for mistakes
+          if (mistakesNumber === 2000) {
+            dispatch(setGameOver(true));
+            // to remove the focus on the last cell focused
+            e.currentTarget.blur();
+            // updatedBoard[row][column].value = solvedBoard[row][column].value;
+          }
+          dispatch(incrementMistakeNumber());
 
-        // this is to calculate the score
-        // it check firstly if this cell is already calculated so to avoid when user enter true value many time for the same cell the increment for score
-        if (e.currentTarget.dataset.calculate === "false") {
-          dispatch(setScore(difficulty));
-
-          // only if i enter a true number
-          dispatch(checkScore(difficulty));
+          if (correctValue.has(id)) {
+            setCorrectValue(
+              (prev) => new Set([...prev].filter((value) => value !== id))
+            );
+          }
+          setWrongValue((prev) => new Set([...prev, id]));
         }
-        // if not calculated so i set calculate to true for this cell
-        e.currentTarget.dataset.calculate = "true";
       } else {
-        getTheMistakeCells(
-          Number(e.currentTarget.value),
-          updatedBoard,
-          row,
-          column
-        );
-        // if the number is wrong increment the mistake number
-        // but first check if this is the last chance for mistakes
-        if (mistakesNumber === 2) {
-          dispatch(setGameOver(true));
-          // reset the mistale number class list
-          setMistakeNumber(new Set());
-          // to remove the focus on the last cell focused
-          e.currentTarget.blur();
-          // updatedBoard[row][column].value = solvedBoard[row][column].value;
-        }
-        dispatch(incrementMistakeNumber());
-
-        if (correctValue.has(id)) {
-          setCorrectValue(
-            (prev) => new Set([...prev].filter((value) => value !== id))
+        if (
+          !isValidPlacement(
+            updatedBoard,
+            row,
+            column,
+            Number(e.currentTarget.value)
+          )
+        ) {
+          handleMistakeNumber(
+            "add",
+            mistakeNumber,
+            updatedBoard,
+            Number(e.currentTarget.value),
+            row,
+            column
           );
+
+          setWrongValue((prev) => new Set([...prev, id]));
         }
-        setWrongValue((prev) => new Set([...prev, id]));
+        dispatch(setSolvedData(updatedBoard));
       }
     }
     setBoard(updatedBoard);
   };
 
   useEffect(() => {
+    // reset the values to remove all the classes style
+    setWrongValue(new Set());
+    setCorrectValue(new Set());
+    dispatch(resetMistakNumber());
+    dispatch(resetScore());
+    setMistakeNumber(new Set());
+    // set the first cell focused by default
+    setFocused("111");
     // so when the game over component appear and i click on new game the function in the game over which let the difficulty be "" fire
     // so i can re select the easy mode and regenerate a new puzzle
-    if (difficulty !== "") {
-      const newBoard = generatePuzzle(difficulty);
-      setBoard(newBoard.emptyBoard);
+    if (difficulty !== "" && difficulty !== "custom") {
+      const defaultBoard = generateEmptyBoard("default");
 
-      // setSolvedBoard(newBoard.board);
+      // get the solved board
+
+      solveSudoku(defaultBoard);
+      const newBoard = generatePuzzle(difficulty, defaultBoard);
+      setBoard(newBoard.emptyBoard);
       dispatch(setSolvedData(newBoard.board));
-      // reset the values to remove all the classes style
-      setWrongValue(new Set());
-      setCorrectValue(new Set());
-      dispatch(resetMistakNumber());
-      dispatch(resetScore());
-      setMistakeNumber(new Set());
-      // set the first cell focused by default
-      setFocused("111");
+    }
+    if (difficulty !== "" && difficulty === "custom") {
+      const defaultBoard = generateEmptyBoard("custom");
+      setBoard(defaultBoard);
+      dispatch(setSolvedData(defaultBoard));
     }
   }, [difficulty, dispatch]);
 
@@ -194,6 +215,14 @@ const SudokuShape = () => {
       dispatch(checkScore(difficulty));
     }
   }, [hint]);
+
+  // this use effect is for the custom board solver
+  useEffect(() => {
+    if (solvedCustomBoard) {
+      setBoard(solvedBoard);
+      // dispatch(solveCustomBoard(false));
+    }
+  }, [solvedCustomBoard]);
 
   return (
     <div className={`Sudoku-shape-container ${isPaused ? "paused" : ""}`}>
