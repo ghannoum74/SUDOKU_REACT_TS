@@ -107,8 +107,8 @@ input[type="text"]:focus {
   background-color: rgba(0, 0, 0, 0.7);
   position: absolute;
   z-index: 1000;
-  width: 51%;
-  height: 65%;
+  width: 55%;
+  height: 67.5%;
   border-radius: 2px;
   display: flex;
   align-items: center;
@@ -119,7 +119,7 @@ input[type="text"]:focus {
 .game-over .pupop {
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.2);
   background-color: #fff;
-  width: 50%;
+  width: 40%;
   /* height: 50%; */
   border-radius: 5px;
   display: flex;
@@ -248,7 +248,7 @@ input[type="text"]:focus {
   background-color: var(--wrong-cell);
 }
 .table-shape input.mistakNumber {
-  color: var(--wrong-value);
+  /* color: var(--wrong-value); */
   background-color: var(--wrong-cell);
 }
 
@@ -783,6 +783,14 @@ td.focused input {
   flex: 1;
 }
 
+.users-container.custom {
+  min-height: 20.2rem;
+}
+
+.new-game-menu.appear.custom {
+  top: -20% !important;
+}
+
 .users-container .each-user {
   border: 1px solid var(--blur-blue);
   border-radius: 1rem;
@@ -927,4 +935,51 @@ td.focused input {
   80% {
     transform: scale(1.2);
   }
+}
+
+/* style custom setting */
+.custom-setting {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+}
+.custom-setting .solve {
+  /* width: 100%; */
+  color: #fff;
+  background-color: var(--correct-value);
+  border-color: transparent;
+  border-radius: 5px;
+  padding: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  flex: 50%;
+}
+
+.custom-setting .img {
+  flex: 50%;
+  border-radius: 5px;
+  border-color: transparent;
+  cursor: pointer;
+  color: #fff;
+}
+
+.custom-setting .img label {
+  width: 100%;
+  text-align: center;
+  background-color: goldenrod;
+  display: inline-block;
+  padding: 1rem;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 600;
+}
+
+.custom-setting .img label:hover {
+  background-color: rgba(218, 165, 32, 0.81);
+}
+
+.custom-setting .solve:hover {
+  background-color: #0bc40b;
 }
