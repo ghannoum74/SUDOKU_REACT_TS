@@ -66,7 +66,7 @@ const SudokuShape = () => {
     setMistakeNumber(mistakes);
   };
 
-  const resetState = (
+  const resetStates = (
     id: string,
     board: Cell[][],
     row: number,
@@ -79,6 +79,17 @@ const SudokuShape = () => {
     );
   };
 
+  const reset = (type: string, id: string): void => {
+    if (type === "correct") {
+      if (wrongValue.has(id)) {
+        setWrongValue(
+          (prev) => new Set([...prev].filter((value) => value !== id))
+        );
+      }
+      // set the number to be correct
+      setCorrectValue((prev) => new Set([...prev, id]));
+    }
+  };
   const handleInputType = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateInput(e.target.value)) {
       e.target.value = "";
@@ -101,20 +112,13 @@ const SudokuShape = () => {
         row,
         column
       );
-      resetState(id, updatedBoard, row, column);
+      resetStates(id, updatedBoard, row, column);
     } else {
       updatedBoard[row][column].value = Number(e.currentTarget.value);
       if (difficulty !== "custom") {
         // case if number is true
         if (solvedBoard[row][column].value === Number(e.currentTarget.value)) {
-          // remove the number from the wrong section
-          if (wrongValue.has(id)) {
-            setWrongValue(
-              (prev) => new Set([...prev].filter((value) => value !== id))
-            );
-          }
-          // set the number to be correct
-          setCorrectValue((prev) => new Set([...prev, id]));
+          reset("correct", id);
 
           // this is to calculate the score
           // it check firstly if this cell is already calculated so to avoid when user enter true value many time for the same cell the increment for score
