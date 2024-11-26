@@ -67,7 +67,7 @@ const GameNavbar = () => {
           </li>
         ))}
       </ul>
-      {difficultyState !== "custom" ? (
+      {difficultyState !== "custom" && (
         <ul
           className="game-data-wrapper"
           style={{ display: `${isSolved ? "none" : "block"}` }}
@@ -105,7 +105,7 @@ const GameNavbar = () => {
             </li>
           </ul>
         </ul>
-      ) : null}
+      )}
     </div>
   );
 };
