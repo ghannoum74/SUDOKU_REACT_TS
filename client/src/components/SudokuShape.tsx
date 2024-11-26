@@ -22,11 +22,11 @@ import {
   removeMistakeCells,
 } from "../utils/getAndRemoveMistakeNumber";
 import { Cell } from "../types/cell";
+import { validateInput } from "../utils/controleInput";
 
 const SudokuShape = () => {
   const [board, setBoard] = useState<Cell[][]>([]);
   const [focused, setFocused] = useState<string>();
-
   const [correctValue, setCorrectValue] = useState<Set<string>>(new Set());
   const [wrongValue, setWrongValue] = useState<Set<string>>(new Set());
   const [mistakeNumber, setMistakeNumber] = useState<Set<string>>(new Set());
@@ -50,10 +50,6 @@ const SudokuShape = () => {
   );
   const hint = useSelector((state: RootState) => state.hint.hint);
 
-  const focusCells = (e: React.MouseEvent<HTMLElement>) => {
-    setFocused(e.currentTarget.dataset.matrix);
-  };
-
   const handleMistakeNumber = (
     type: string,
     mistakeNumber: Set<string>,
@@ -70,15 +66,25 @@ const SudokuShape = () => {
     setMistakeNumber(mistakes);
   };
 
+  const resetState = (
+    id: string,
+    board: Cell[][],
+    row: number,
+    column: number
+  ): void => {
+    board[row][column].value = null;
+    setWrongValue((prev) => new Set([...prev].filter((value) => value !== id)));
+    setCorrectValue(
+      (prev) => new Set([...prev].filter((value) => value !== id))
+    );
+  };
+
   const handleInputType = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (
-      // so it allows the clear button
-      (e.target.value !== "" && e.target.value.charCodeAt(0) < 49) ||
-      e.target.value.charCodeAt(0) > 57
-    ) {
+    if (validateInput(e.target.value)) {
       e.target.value = "";
       return;
     }
+
     const updatedBoard = JSON.parse(JSON.stringify(board));
     const row: number = Number(e.currentTarget.dataset.row) - 1;
     const column: number = Number(e.currentTarget.dataset.column) - 1;
@@ -95,14 +101,7 @@ const SudokuShape = () => {
         row,
         column
       );
-
-      updatedBoard[row][column].value = null;
-      setWrongValue(
-        (prev) => new Set([...prev].filter((value) => value !== id))
-      );
-      setCorrectValue(
-        (prev) => new Set([...prev].filter((value) => value !== id))
-      );
+      resetState(id, updatedBoard, row, column);
     } else {
       updatedBoard[row][column].value = Number(e.currentTarget.value);
       if (difficulty !== "custom") {
@@ -268,7 +267,7 @@ const SudokuShape = () => {
                     data-column={cell.column}
                     data-block={cell.block}
                     maxLength={1}
-                    onClick={focusCells}
+                    onClick={() => setFocused(cell.matrix)}
                     onChange={handleInputType}
                     readOnly={cell.unchangebale ? true : false}
                     data-calculate={cell.calculate}
