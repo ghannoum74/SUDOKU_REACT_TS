@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { RootState } from "../states/store";
 
 type usersType = {
   username: string;
@@ -13,6 +15,9 @@ type usersType = {
 const LeaderBoard = () => {
   const [users, setUsers] = useState<usersType[]>([]);
   const [isPending, setIsPending] = useState<boolean>(false);
+  const difficultyState = useSelector(
+    (state: RootState) => state.chosingDifficulty.difficulty
+  );
   const getUsers = async () => {
     setIsPending(true);
     try {
@@ -36,7 +41,11 @@ const LeaderBoard = () => {
   }, []);
   return (
     <div className="sorting-bar-container">
-      <div className="users-container">
+      <div
+        className={`users-container ${
+          difficultyState === "custom" ? "custom" : ""
+        }`}
+      >
         {isPending && <span className="loader"></span>}
         {users.length > 0 ? (
           users.map((user, index) => (
