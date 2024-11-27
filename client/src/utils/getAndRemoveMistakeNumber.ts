@@ -48,8 +48,6 @@ export const removeMistakeCells = (
 
   // Check the column
   for (let i = 0; i < 9; i++) {
-    // console.log("hello");
-    // console.log(value);
     if (board[i][column].value === value) {
       console.log(value);
       mistakeIds.delete(board[i][column].id);
@@ -59,7 +57,6 @@ export const removeMistakeCells = (
   // Check the row
   for (let i = 0; i < 9; i++) {
     if (board[row][i].value === value) {
-      console.log(value);
       mistakeIds.delete(board[row][i].id);
     }
   }
@@ -70,7 +67,6 @@ export const removeMistakeCells = (
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
       if (board[startRow + i][startCol + j].value === value) {
-        console.log(value);
         mistakeIds.delete(board[startRow + i][startCol + j].id);
       }
     }
