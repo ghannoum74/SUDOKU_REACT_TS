@@ -1,10 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePause, faCirclePlay } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCirclePause,
+  faCirclePlay,
+  faLightbulb,
+} from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { chooseDifficulty } from "../states/difficultyGame";
 import { RootState } from "../states/store";
 import { resetTimer, setPause, startTimer } from "../states/timer";
+import { decrementHint } from "../states/hint";
 
 const GameNavbar = () => {
   type Level = "easy" | "medium" | "hard" | "expert" | "custom";
@@ -49,6 +54,8 @@ const GameNavbar = () => {
     dispatch(chooseDifficulty(e.currentTarget.id.toLowerCase() as Level));
   };
 
+  const hint = useSelector((state: RootState) => state.hint.hint);
+
   return (
     <div className="game-navbar-container">
       <ul className="dificulty-wrapper">
@@ -73,6 +80,17 @@ const GameNavbar = () => {
           style={{ display: `${isSolved ? "none" : "block"}` }}
         >
           <ul className="data-game-container">
+            <div className={`icon-container ${hint === 0 ? "disabel" : ""}`}>
+              <li className="hint" onClick={() => dispatch(decrementHint())}>
+                <FontAwesomeIcon
+                  icon={faLightbulb}
+                  // size="2xl"
+                  style={{ color: "#325aaf" }}
+                />
+                <div className="hint-number">{hint}</div>
+              </li>
+              {/* <div className="caption">Hint</div> */}
+            </div>
             <li>
               <span className="title">Mistakes:</span>
               <span className="value">{mistakesNb}/3</span>
