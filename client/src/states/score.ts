@@ -59,7 +59,6 @@ export const sudokuScore = createSlice({
       switch (action.payload) {
         case "easy": {
           state.isSolved = state.score === 1500;
-
           break;
         }
         case "medium": {
