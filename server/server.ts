@@ -11,6 +11,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.use(
+  cors({
+    origin: ["https://sudoku-mern.netlify.app/"],
+  })
+);
+app.use(express.json());
+
 const defaultImagePath =
   "https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.jpg";
 
