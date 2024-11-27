@@ -27,7 +27,7 @@ const LeaderBoard = () => {
     setIsPending(true);
     try {
       const result = await axios.get(
-        `${import.meta.env.REACT_APP_BACKEND_URL}/getUsers`
+        "https://sudoku-react-ts.onrender.com/getUsers"
       );
 
       if (result) {
