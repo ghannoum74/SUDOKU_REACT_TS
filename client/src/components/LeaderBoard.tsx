@@ -12,6 +12,11 @@ type usersType = {
   profileImg: string;
 };
 
+const convertToSeconds = (userTime: string) => {
+  const [hours, minutes, seconds] = userTime.split(":").map(Number);
+  return hours * 3600 + minutes * 60 + seconds;
+};
+
 const LeaderBoard = () => {
   const [users, setUsers] = useState<usersType[]>([]);
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -48,24 +53,26 @@ const LeaderBoard = () => {
       >
         {isPending && <span className="loader"></span>}
         {users.length > 0 ? (
-          users.map((user, index) => (
-            <div className="each-user" key={index}>
-              <div className="walpaper">
-                <img alt="walpaper" src={user.profileImg} />
-              </div>
-              <div className="description">
-                <div className="username">
-                  {user.username.charAt(0).toUpperCase() +
-                    user.username.slice(1)}
+          users
+            .sort((a, b) => convertToSeconds(a.time) - convertToSeconds(b.time))
+            .map((user, index) => (
+              <div className="each-user" key={index}>
+                <div className="walpaper">
+                  <img alt="walpaper" src={user.profileImg} />
+                </div>
+                <div className="description">
+                  <div className="username">
+                    {user.username.charAt(0).toUpperCase() +
+                      user.username.slice(1)}
+                  </div>
+                </div>
+
+                <div className="container-time">
+                  <div className="user-time">{user.time}</div>
+                  {/* <div className="user-score">{user.score}</div> */}
                 </div>
               </div>
-
-              <div className="container-time">
-                <div className="user-time">{user.time}</div>
-                {/* <div className="user-score">{user.score}</div> */}
-              </div>
-            </div>
-          ))
+            ))
         ) : (
           <></>
           // <h3 className="rotingtxt">No data available</h3>
