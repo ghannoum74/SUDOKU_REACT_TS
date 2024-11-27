@@ -4,8 +4,7 @@ import mistakesNumbers from "./mistakesNumber";
 import sudokuScore from "./score";
 import setTimer from "./timer";
 import setSolvedData from "./SolvedBoardData";
-
-import setHint from "./hint";
+import decrementHint from "./hint";
 import solveCustomBoard from "./solveCustomBoard";
 
 const store = configureStore({
@@ -16,7 +15,7 @@ const store = configureStore({
     timer: setTimer,
     setSolvedData: setSolvedData,
     solveCustomBoard: solveCustomBoard,
-    hint: setHint,
+    hint: decrementHint,
   },
 });
 
