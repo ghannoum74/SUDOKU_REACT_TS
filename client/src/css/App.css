@@ -189,6 +189,33 @@ input[type="text"]:focus {
   position: relative;
 }
 
+.Sudoku-shape-container.isPending {
+  /* filter: blur(1px); */
+  position: relative;
+}
+
+.Sudoku-shape-container .backg-loader {
+  width: 58%;
+  height: 100%;
+  backdrop-filter: blur(1px);
+  position: absolute;
+  top: 0;
+}
+
+.Sudoku-shape-container .attention {
+  position: absolute;
+  top: 55%;
+  left: 14%;
+  color: rgba(255, 0, 0, 0.758);
+  font-weight: 600;
+}
+
+.Sudoku-shape-container .loader {
+  position: absolute;
+  top: 42% !important;
+  left: 44.5%;
+}
+
 .pause-icon-container {
   position: absolute;
   left: 50%;
@@ -275,6 +302,43 @@ td.focused input {
 }
 
 /* styling sudoku setting container */
+.header-box {
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: radial-gradient(
+    circle,
+    var(--light-blue) 0%,
+    var(--light-blue) 50%,
+    var(--light-blue) 100%
+  );
+  border-radius: 3rem;
+  padding: 1rem 2rem;
+  color: white;
+  /* gap: 1rem; */
+  box-shadow: 0 6px 8px rgba(133, 175, 238, 0.6);
+}
+
+.header-box h1 {
+  width: fit-content;
+  flex: 0.8;
+  text-align: center;
+}
+
+.header-box .curver-arrow {
+  width: 5rem;
+}
+
+.header-box .curver-arrow img {
+  width: 100%;
+  transform: rotate(60deg);
+}
+
+.header-box svg {
+  font-size: 5rem;
+}
+
 .setting-container {
   flex: 50%;
 }
@@ -297,7 +361,7 @@ td.focused input {
   color: var(--light-blue);
 }
 
-.sudoku-setting-container .sudoku-setting-icons li {
+/* .sudoku-setting-container .sudoku-setting-icons li {
   background-color: var(--blur-blue);
   border-radius: 50%;
   width: 64px;
@@ -306,17 +370,32 @@ td.focused input {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+} */
+.icon-container li {
+  background-color: var(--blur-blue);
+  border-radius: 10px;
+  width: 50px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  cursor: pointer;
+}
+
+.icon-container.disabel {
+  display: none;
 }
 
 .sudoku-setting-container .sudoku-setting-icons li:hover {
   background-color: #dce3ed;
 }
 
-.sudoku-setting-container .sudoku-setting-icons .hint {
+.hint {
   position: relative;
 }
 
-.sudoku-setting-container .sudoku-setting-icons .hint .hint-number {
+/* .sudoku-setting-container .sudoku-setting-icons .hint .hint-number {
   color: white;
   text-align: center;
   font-size: 12px;
@@ -331,6 +410,26 @@ td.focused input {
   position: absolute;
   top: -15%;
   left: 60%;
+} */
+.hint .hint-number {
+  color: var(--light-blue);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  /* background-color: var(--light-blue); */
+  /* width: 24px;
+  height: 24px;
+  border-radius: 50px; */
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  /* position: absolute;
+  top: -15%;
+  left: 60%; */
+}
+
+.hint:hover {
+  background-color: #dce3ed;
 }
 
 /* styling setting container */
@@ -784,11 +883,11 @@ td.focused input {
 }
 
 .users-container.custom {
-  min-height: 20.2rem;
+  min-height: 18.8rem;
 }
 
 .new-game-menu.appear.custom {
-  top: -20% !important;
+  top: -28% !important;
 }
 
 .users-container .each-user {
@@ -954,8 +1053,13 @@ td.focused input {
   font-weight: 600;
   flex: 50%;
 }
-.custom-setting .solve.not-active {
-  cursor: not-allowed;
+.custom-setting .solve.not-active,
+.customLabel.not-allowed {
+  cursor: not-allowed !important;
+}
+
+.customLabel.not-allowed:hover {
+  background-color: goldenrod !important;
 }
 
 .custom-setting .solve.not-active:hover {
