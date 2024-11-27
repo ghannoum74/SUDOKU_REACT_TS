@@ -23,6 +23,8 @@ import {
 } from "../utils/getAndRemoveMistakeNumber";
 import { Cell } from "../types/cell";
 import { validateInput } from "../utils/inputValidation";
+import { solveCustomBoard } from "../states/solveCustomBoard";
+import { resetHint } from "../states/hint";
 
 const SudokuShape = () => {
   const [board, setBoard] = useState<Cell[][]>([]);
@@ -47,6 +49,14 @@ const SudokuShape = () => {
 
   const solvedCustomBoard = useSelector(
     (state: RootState) => state.solveCustomBoard.isSolved
+  );
+
+  const imageData = useSelector(
+    (state: RootState) => state.solveCustomBoard.isReadIt
+  );
+
+  const isImagePending = useSelector(
+    (state: RootState) => state.solveCustomBoard.isPending
   );
   const hint = useSelector((state: RootState) => state.hint.hint);
 
@@ -165,6 +175,10 @@ const SudokuShape = () => {
           );
 
           setWrongValue((prev) => new Set([...prev, id]));
+          // for the solve button
+          dispatch(dispatch(solveCustomBoard(true)));
+        } else {
+          dispatch(dispatch(solveCustomBoard(false)));
         }
         dispatch(setSolvedData(updatedBoard));
       }
@@ -179,6 +193,8 @@ const SudokuShape = () => {
     dispatch(resetMistakNumber());
     dispatch(resetScore());
     setMistakeNumber(new Set());
+    dispatch(solveCustomBoard(false));
+    dispatch(resetHint());
     // set the first cell focused by default
     setFocused("111");
   };
@@ -204,8 +220,7 @@ const SudokuShape = () => {
 
   // this is for the hint feature
   useEffect(() => {
-    console.log(hint);
-    if (board.length > 0) {
+    if (board.length > 0 && hint === 3) {
       setBoard(giveHint(board));
       dispatch(setScore(difficulty));
       dispatch(checkScore(difficulty));
@@ -214,15 +229,17 @@ const SudokuShape = () => {
 
   // this use effect is for the custom board solver
   useEffect(() => {
-    if (solvedCustomBoard) {
-      console.log("hello");
+    if (solvedCustomBoard || imageData) {
       setBoard(solvedBoard);
-      // dispatch(solveCustomBoard(false));
     }
-  }, [solvedCustomBoard]);
+  }, [solvedCustomBoard, imageData]);
 
   return (
-    <div className={`Sudoku-shape-container ${isPaused ? "paused" : ""}`}>
+    <div
+      className={`Sudoku-shape-container ${isPaused ? "paused" : ""} ${
+        !isImagePending ? "isPending" : ""
+      }`}
+    >
       {isPaused ? (
         <>
           <div
@@ -277,6 +294,14 @@ const SudokuShape = () => {
           ))}
         </tbody>
       </table>
+      {isImagePending && (
+        <div className="backg-loader">
+          <span className="loader"></span>
+          <small className="attention">
+            ⚠️ Note: The results may contain minor inaccuracies.
+          </small>
+        </div>
+      )}
     </div>
   );
 };
