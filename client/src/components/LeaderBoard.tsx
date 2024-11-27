@@ -26,7 +26,9 @@ const LeaderBoard = () => {
   const getUsers = async () => {
     setIsPending(true);
     try {
-      const result = await axios.get("http://localhost:3000/getUsers");
+      const result = await axios.get(
+        `${import.meta.env.REACT_APP_BACKEND_URL}/getUsers`
+      );
 
       if (result) {
         setUsers(result.data);
