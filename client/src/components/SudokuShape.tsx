@@ -24,6 +24,7 @@ import {
 import { Cell } from "../types/cell";
 import { validateInput } from "../utils/inputValidation";
 import { solveCustomBoard } from "../states/solveCustomBoard";
+import { resetHint } from "../states/hint";
 
 const SudokuShape = () => {
   const [board, setBoard] = useState<Cell[][]>([]);
@@ -57,7 +58,7 @@ const SudokuShape = () => {
   const isImagePending = useSelector(
     (state: RootState) => state.solveCustomBoard.isPending
   );
-  const hint = useSelector((state: RootState) => state.hint.hint);
+  const isHinted = useSelector((state: RootState) => state.hint.isHinted);
 
   const handleMistakeNumber = (
     type: string,
@@ -193,6 +194,7 @@ const SudokuShape = () => {
     dispatch(resetScore());
     setMistakeNumber(new Set());
     dispatch(solveCustomBoard(false));
+    dispatch(resetHint());
     // set the first cell focused by default
     setFocused("111");
   };
@@ -223,7 +225,7 @@ const SudokuShape = () => {
       dispatch(setScore(difficulty));
       dispatch(checkScore(difficulty));
     }
-  }, [hint]);
+  }, [isHinted]);
 
   // this use effect is for the custom board solver
   useEffect(() => {

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { chooseDifficulty } from "../states/difficultyGame";
 import { RootState } from "../states/store";
 import { resetTimer, setPause, startTimer } from "../states/timer";
-import { decrementHint } from "../states/hint";
+import { decrementHint, isHinted } from "../states/hint";
 
 const GameNavbar = () => {
   type Level = "easy" | "medium" | "hard" | "expert" | "custom";
@@ -56,6 +56,11 @@ const GameNavbar = () => {
 
   const hint = useSelector((state: RootState) => state.hint.hint);
 
+  const getHint = () => {
+    dispatch(decrementHint());
+    dispatch(isHinted());
+  };
+
   return (
     <div className="game-navbar-container">
       <ul className="dificulty-wrapper">
@@ -81,7 +86,7 @@ const GameNavbar = () => {
         >
           <ul className="data-game-container">
             <div className={`icon-container ${hint === 0 ? "disabel" : ""}`}>
-              <li className="hint" onClick={() => dispatch(decrementHint())}>
+              <li className="hint" onClick={getHint}>
                 <FontAwesomeIcon
                   icon={faLightbulb}
                   // size="2xl"
