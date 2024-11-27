@@ -12,13 +12,16 @@ export const getHint = createSlice({
   name: "hint",
   initialState,
   reducers: {
-    setHint: (state) => {
+    decrementHint: (state) => {
       if (state.hint > 0) {
         state.hint -= 1;
       }
     },
+    resetHint: (state) => {
+      state.hint = 3;
+    },
   },
 });
 
-export const { setHint } = getHint.actions;
+export const { decrementHint, resetHint } = getHint.actions;
 export default getHint.reducer;
