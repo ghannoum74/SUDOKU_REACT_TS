@@ -2,7 +2,7 @@
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../states/store";
-import { setSolvedData, solvedData } from "../states/SolvedBoardData";
+import { setSolvedData } from "../states/SolvedBoardData";
 import {
   imageDataGetIt,
   setIsPending,
@@ -10,7 +10,7 @@ import {
 } from "../states/solveCustomBoard";
 import { generateEmptyBoard, solveSudoku } from "../utils/backTrackingAlgo";
 import Tesseract from "tesseract.js";
-import { Cell } from "@types/cell";
+// import { Cell } from "@types/cell";
 
 const CustomSetting: React.FC = () => {
   // Redux state and dispatch
@@ -24,9 +24,8 @@ const CustomSetting: React.FC = () => {
 
   // Local state
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [sudokuArray, setSudokuArray] = useState<Cell[][]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [currentStep, setCurrentStep] = useState<string>("");
+  const [processing, setProcessing] = useState<boolean>(false);
+  const [visualize, setVisualize] = useState<boolean>(true);
   const imgRef = useRef<HTMLImageElement | null>(null);
 
   // * Image Upload Functionality
@@ -36,37 +35,30 @@ const CustomSetting: React.FC = () => {
     const file = event.target.files ? event.target.files[0] : null;
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => {
+      reader.onload = async () => {
         const imageData = reader.result as string;
         setSelectedImage(imageData);
-        handleProcessImage(imageData);
+        await handleProcessImage();
+        setProcessing(true);
       };
       reader.readAsDataURL(file);
-      handleProcessImage();
     }
   };
 
   // Preprocess the uploaded image for OCR
   const preprocessImage = async (): Promise<void> => {
     if (imgRef.current && selectedImage) {
+      setVisualize(false);
       dispatch(setIsPending(true));
-      setCurrentStep("Starting image processing with OpenCV...");
       let img: cv.Mat | null = null;
       try {
         img = cv.imread(imgRef.current); // Load image into OpenCV
-        setCurrentStep("Image loaded into OpenCV.");
-
         cv.cvtColor(img, img, cv.COLOR_RGBA2GRAY, 0);
         cv.threshold(img, img, 150, 255, cv.THRESH_BINARY);
-        setCurrentStep(
-          "Image preprocessing done (grayscale and thresholding)."
-        );
-
         // Calculate cell dimensions based on the image size
         const cellWidth = img.cols / 9;
         const cellHeight = img.rows / 9;
         const results: SudokuBoard = generateEmptyBoard(currentBoard);
-
         // Process cells in a nested loop
         for (let row = 0; row < 9; row++) {
           for (let col = 0; col < 9; col++) {
@@ -80,7 +72,6 @@ const CustomSetting: React.FC = () => {
             );
             const resizedCell = new cv.Mat();
             cv.resize(cellImg, resizedCell, new cv.Size(50, 50));
-            setCurrentStep(`Cell [${row},${col}] processed...`);
 
             const canvas = document.createElement("canvas");
             cv.imshow(canvas, resizedCell);
@@ -107,9 +98,9 @@ const CustomSetting: React.FC = () => {
           }
         }
         console.log(results);
-        setSudokuArray(results);
-        dispatch(imageDataGetIt(true));
         dispatch(setSolvedData(results));
+        setProcessing(false);
+        dispatch(imageDataGetIt(true));
         img.delete();
       } catch (error) {
         console.error("Error during image processing:", error);
@@ -117,8 +108,6 @@ const CustomSetting: React.FC = () => {
       } finally {
         dispatch(setIsPending(false));
       }
-    } else {
-      setCurrentStep("Image not ready for processing.");
     }
   };
 
@@ -128,12 +117,10 @@ const CustomSetting: React.FC = () => {
     solveSudoku(clonedBoard);
     dispatch(setSolvedData(clonedBoard));
     dispatch(solveCustomBoard(true));
-    // dispatch(imageDataGetIt(false));
   };
 
   // Handle processing the image
   const handleProcessImage = async (): Promise<void> => {
-    setSudokuArray([]);
     await preprocessImage();
   };
 
@@ -145,11 +132,13 @@ const CustomSetting: React.FC = () => {
           id="customFileInput"
           style={{ display: "none" }}
           onChange={handleImageUpload}
-          disabled={!imageDataGetIt ? true : false}
+          disabled={processing || boardSolved}
         />
         <label
           htmlFor="customFileInput"
-          className={`customLabel ${!imageDataGetIt ? "not-allowed" : ""}`}
+          className={`customLabel ${
+            boardSolved || processing ? "not-allowed" : ""
+          }`}
         >
           Upload image
         </label>
@@ -166,19 +155,22 @@ const CustomSetting: React.FC = () => {
       </div>
 
       <button
-        className={`solve ${boardSolved ? "not-active" : ""}`}
+        className={`solve ${boardSolved || processing ? "not-allowed" : ""}`}
         onClick={solveManualSudoku}
-        disabled={boardSolved}
+        disabled={boardSolved || processing}
       >
         Solve
       </button>
 
-      {selectedImage && !boardSolved && (
+      {selectedImage && !boardSolved && visualize && (
         <button
-          className="process-image-btn"
+          className={`process-image-btn ${
+            boardSolved || processing ? "not-allowed" : ""
+          }`}
           onClick={handleProcessImage}
-          disabled={loading}
-        ></button>
+        >
+          Visualize
+        </button>
       )}
     </div>
   );

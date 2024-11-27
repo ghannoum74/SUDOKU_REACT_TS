@@ -24,7 +24,6 @@ import {
 import { Cell } from "../types/cell";
 import { validateInput } from "../utils/inputValidation";
 import { solveCustomBoard } from "../states/solveCustomBoard";
-import { resetHint } from "../states/hint";
 
 const SudokuShape = () => {
   const [board, setBoard] = useState<Cell[][]>([]);
@@ -194,7 +193,6 @@ const SudokuShape = () => {
     dispatch(resetScore());
     setMistakeNumber(new Set());
     dispatch(solveCustomBoard(false));
-    dispatch(resetHint());
     // set the first cell focused by default
     setFocused("111");
   };
@@ -220,7 +218,7 @@ const SudokuShape = () => {
 
   // this is for the hint feature
   useEffect(() => {
-    if (board.length > 0 && hint === 3) {
+    if (board.length > 0) {
       setBoard(giveHint(board));
       dispatch(setScore(difficulty));
       dispatch(checkScore(difficulty));

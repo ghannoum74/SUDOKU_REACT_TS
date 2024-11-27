@@ -38,10 +38,6 @@ input[type="text"]:focus {
   width: 55%;
   padding-top: 1rem;
   margin: auto;
-
-  /* display: flex;
-  align-items: center;
-  justify-content: center; */
 }
 
 /* styling the game navbar */
@@ -50,6 +46,7 @@ input[type="text"]:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .game-navbar-container .dificulty-wrapper,
@@ -771,6 +768,11 @@ td.focused input {
   color: #5772ad !important;
 }
 
+.right-side .name-place {
+  width: 100%;
+  text-align: center;
+}
+
 .right-side .name-place input {
   background-color: transparent;
   caret-color: #fff;
@@ -1051,10 +1053,11 @@ td.focused input {
   padding: 1rem;
   cursor: pointer;
   font-weight: 600;
-  flex: 50%;
+  flex: 34%;
 }
-.custom-setting .solve.not-active,
-.customLabel.not-allowed {
+.custom-setting .solve.not-allowed,
+.customLabel.not-allowed,
+.custom-setting .process-image-btn.solve.not-allowed {
   cursor: not-allowed !important;
 }
 
@@ -1062,12 +1065,32 @@ td.focused input {
   background-color: goldenrod !important;
 }
 
-.custom-setting .solve.not-active:hover {
+.custom-setting .solve.not-allowed:hover {
   background-color: var(--correct-value);
+}
+.custom-setting
+  .custom-setting
+  .process-image-btn.solve.not-allowed.not-allowed:hover {
+  background-color: #e55c6c;
+}
+
+.custom-setting .process-image-btn {
+  flex: 34%;
+  color: #fff;
+  background-color: #e55c6c;
+  border-color: transparent;
+  border-radius: 5px;
+  padding: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.custom-setting .process-image-btn:hover {
+  background-color: #e55c6cd1;
 }
 
 .custom-setting .img {
-  flex: 50%;
+  flex: 34%;
   border-radius: 5px;
   border-color: transparent;
   cursor: pointer;
@@ -1093,4 +1116,143 @@ td.focused input {
 
 .custom-setting .solve:hover {
   background-color: #0bc40b;
+}
+
+.congrat-container::-webkit-scrollbar {
+  width: 4px;
+  visibility: hidden;
+}
+
+.congrat-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+  visibility: hidden;
+}
+
+.congrat-container::-webkit-scrollbar-thumb {
+  background: #c6c6c6;
+  border-radius: 10px;
+  visibility: hidden;
+}
+
+.congrat-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    width: 70%;
+    margin: auto;
+  }
+
+  .game-over {
+    width: 90%;
+  }
+  .congrat-container {
+    width: 90%;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .left-side {
+    order: 1;
+    width: 100%;
+    text-align: center;
+  }
+
+  .right-side {
+    order: 2;
+    width: 100%;
+    text-align: center;
+  }
+
+  .profile-picture img {
+    max-width: 80px;
+    height: auto;
+  }
+
+  .btns button {
+    width: 100%; /* Full-width buttons */
+    margin: 5px 0;
+  }
+}
+
+@media (max-width: 1000px) {
+  .main-container {
+    width: 90%;
+    margin: auto;
+  }
+
+  .game-over {
+    width: 90%;
+  }
+}
+@media (max-width: 1300px) {
+  .main-container {
+    width: 80%;
+    margin: auto;
+  }
+
+  .game-over {
+    width: 90%;
+  }
+}
+
+@media (max-width: 700px) {
+  .game-container {
+    flex-direction: column;
+  }
+  .congrat-container {
+    flex-direction: column;
+    height: 100%;
+    width: 80%;
+  }
+  .game-over {
+    width: 90%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .congrat-container {
+    width: 80%;
+    height: 65%;
+    flex-direction: column;
+    gap: 2%;
+    overflow-y: auto;
+  }
+
+  .left-side,
+  .right-side {
+    width: 70%;
+    margin-right: 0 !important;
+  }
+
+  .right-side {
+    padding-bottom: 1rem !important;
+  }
+  .left-side {
+    margin: 3rem auto auto auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .congrat-container {
+    width: 95%;
+    padding: 10px;
+  }
+
+  .left-side,
+  .right-side {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .name-id input {
+    width: 100% !important;
+  }
+
+  .btns button {
+    font-size: 14px;
+  }
 }
